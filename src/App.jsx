@@ -307,8 +307,7 @@ export default function App() {
       title: newNotice.title,
       content: newNotice.content,
       category: newNotice.category,
-      attachment_url: newNotice.attachment_url || null,
-      posted_by: currentRole === 'coordinator' ? 'Placement Cell Coordinator' : 'Club Student'
+      attachment_url: newNotice.attachment_url || null
     };
 
     try {
@@ -316,6 +315,7 @@ export default function App() {
       if (!error && data) {
         setNotices([data[0], ...notices]);
       } else {
+        if (error) console.error('Error inserting notice:', error);
         setNotices([{ ...item, id: Date.now().toString(), created_at: new Date().toISOString() }, ...notices]);
       }
     } catch (err) {
@@ -334,8 +334,7 @@ export default function App() {
       title: newTask.title,
       description: newTask.description,
       department: newTask.department,
-      deadline: newTask.deadline || new Date().toISOString().split('T')[0],
-      status: newTask.status || 'todo'
+      deadline: newTask.deadline || new Date().toISOString().split('T')[0]
     };
 
     try {
@@ -343,6 +342,7 @@ export default function App() {
       if (!error && data) {
         setTasks([data[0], ...tasks]);
       } else {
+        if (error) console.error('Error inserting task:', error);
         setTasks([{ ...item, id: Date.now().toString() }, ...tasks]);
       }
     } catch (err) {
@@ -361,9 +361,7 @@ export default function App() {
       title: newResource.title,
       category: newResource.category,
       month: newResource.month,
-      file_url: newResource.file_url || '#',
-      size: '2.5 MB',
-      uploaded_by: currentRole === 'coordinator' ? 'Coordinator' : 'Club Student'
+      file_url: newResource.file_url || '#'
     };
 
     try {
@@ -371,6 +369,7 @@ export default function App() {
       if (!error && data) {
         setResources([data[0], ...resources]);
       } else {
+        if (error) console.error('Error inserting resource:', error);
         setResources([{ ...item, id: Date.now().toString() }, ...resources]);
       }
     } catch (err) {
