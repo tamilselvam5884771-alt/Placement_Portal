@@ -9,11 +9,7 @@ const supabaseAnonKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY || 
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 
   import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-  'sb_publishable_mEMzVwydRoAkilchT-I31A_sxXHjoTk';
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase credentials missing in environment');
-}
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0a21pZWxxb21mZ293b2xpcG96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczMDQwNDQsImV4cCI6MjEwMjg4MDA0NH0.bILeMtcVHh_9QtGrKgT_W-_9e4mpxFyoz2ZnlH09LVI';
 
 export const supabase = createClient(
   supabaseUrl,
