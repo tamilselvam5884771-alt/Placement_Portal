@@ -451,8 +451,8 @@ export default function App() {
               <span className="text-[10px] font-extrabold tracking-widest uppercase text-[#8C7A70] block">
                 Training & Placement Club
               </span>
-              <h1 className="text-lg font-bold tracking-tight text-[#2B1810] flex items-center gap-2">
-                Placement Portal <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
+              <h1 className="text-lg font-bold tracking-tight text-[#2B1810]">
+                Placement Portal
               </h1>
             </div>
           </div>
@@ -573,9 +573,6 @@ export default function App() {
             <h2 className="text-4xl sm:text-5xl font-light tracking-tight text-[#2B1810]">
               Institutional <span className="font-serif italic font-normal">Placement & Task</span> Hub
             </h2>
-            <p className="text-sm sm:text-base text-[#6E5A50] leading-relaxed max-w-2xl">
-              Role-restricted digital platform connected with your Supabase database for department tasks, verified notice circulars, study notes, and placement records.
-            </p>
           </div>
 
           {/* Quick Metrics Cards */}
