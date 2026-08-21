@@ -32,15 +32,9 @@ import {
   HelpCircle,
   Share2,
   ChevronDown,
-  Database,
-  Key,
-  Lock,
-  Calendar,
-  Building2,
-  ExternalLink,
-  GraduationCap
+  Loader2
 } from 'lucide-react';
-import { getSupabaseClient } from './lib/supabaseClient';
+import supabase from './lib/supabaseClient';
 
 const playAudioFeedback = (type = 'click') => {
   try {
@@ -157,7 +151,7 @@ const ConfettiCanvas = ({ active, onComplete }) => {
 };
 
 export default function App() {
-  // Roles: 'student' | 'club_student' | 'coordinator' | 'hod'
+  // User Roles: 'student' | 'club_student' | 'coordinator' | 'hod'
   const [currentRole, setCurrentRole] = useState('student');
   const [currentDept, setCurrentDept] = useState('CSE');
   const [activeTab, setActiveTab] = useState('overview');
@@ -165,16 +159,17 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedResourceCategory, setSelectedResourceCategory] = useState('All');
 
-  // Supabase Configuration State
-  const [supabaseUrl, setSupabaseUrl] = useState('');
-  const [supabaseKey, setSupabaseKey] = useState('');
-  const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
-  const [client, setClient] = useState(() => getSupabaseClient());
+  // Database Data States (No predefined dummy data)
+  const [notices, setNotices] = useState([]);
+  const [resources, setResources] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [placements, setPlacements] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Interactive Features State
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
-  const [bookmarkedNotices, setBookmarkedNotices] = useState(['1']);
+  const [bookmarkedNotices, setBookmarkedNotices] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
   const [triggerConfetti, setTriggerConfetti] = useState(false);
   const [selectedPlacement, setSelectedPlacement] = useState(null);
@@ -187,178 +182,69 @@ export default function App() {
   const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
   const [isPlacementModalOpen, setIsPlacementModalOpen] = useState(false);
 
-  // Forms
+  // Forms State
   const [newNotice, setNewNotice] = useState({ title: '', content: '', category: 'General', attachment_url: '' });
   const [newTask, setNewTask] = useState({ title: '', description: '', department: 'CSE', deadline: '', status: 'todo' });
   const [newResource, setNewResource] = useState({ title: '', category: 'Technical', month: 'August 2026', file_url: '' });
   const [newPlacement, setNewPlacement] = useState({ student_name: '', company: '', role: '', package: '', department: 'CSE', quote: '' });
 
-  // Initial Data State (Backed by Supabase & Fallback Local Storage)
-  const [notices, setNotices] = useState([
-    {
-      id: '1',
-      title: 'TCS Digital Campus Recruitment Drive — Interview Schedule',
-      content: 'Shortlisted candidates must report to Lab 3 by 9:00 AM in formal attire with 2 hard copies of their resume.',
-      category: 'Urgent',
-      attachment_url: '#',
-      created_at: '2026-08-21T09:30:00Z',
-      posted_by: 'Coordinator'
-    },
-    {
-      id: '2',
-      title: 'System Design & High-Performance Computing Prep Session',
-      content: 'Live interactive technical session hosted by alumnus currently at Amazon. Meeting link will activate 10 mins before.',
-      category: 'HR Session',
-      attachment_url: '#',
-      created_at: '2026-08-20T14:15:00Z',
-      posted_by: 'Placement Cell'
-    },
-    {
-      id: '3',
-      title: 'Accenture Assessment Phase I: Evaluation & Results',
-      content: 'Aptitude and coding round scores are compiled and archived. Review performance metrics before round 2.',
-      category: 'Placement Update',
-      attachment_url: null,
-      created_at: '2026-08-19T11:00:00Z',
-      posted_by: 'Coordinator'
-    }
-  ]);
-
-  const [resources, setResources] = useState([
-    {
-      id: '1',
-      title: 'Core Java & Concurrency Architecture Cheat Sheet',
-      category: 'Technical',
-      month: 'August 2026',
-      file_url: '#',
-      size: '2.4 MB'
-    },
-    {
-      id: '2',
-      title: 'Quantitative Reasoning & Aptitude Master Deck',
-      category: 'Aptitude',
-      month: 'August 2026',
-      file_url: '#',
-      size: '5.8 MB'
-    },
-    {
-      id: '3',
-      title: 'STAR Method Behavioral Interview Masterclass',
-      category: 'HR Interview',
-      month: 'July 2026',
-      file_url: '#',
-      size: '1.2 MB'
-    }
-  ]);
-
-  const [tasks, setTasks] = useState([
-    {
-      id: '1',
-      title: 'Resume validation & digital roster collation',
-      description: 'Verify 2026 batch resume links against master spreadsheet.',
-      department: 'CSE',
-      deadline: '2026-08-25',
-      status: 'in_progress'
-    },
-    {
-      id: '2',
-      title: 'Round 1 mock technical interview slot allocation',
-      description: 'Schedule alumni interview slots across 3 panel tracks.',
-      department: 'CSE',
-      deadline: '2026-08-27',
-      status: 'todo'
-    },
-    {
-      id: '3',
-      title: 'ECE Aptitude lab seating plan finalization',
-      description: 'Confirm 120 systems for online assessment.',
-      department: 'ECE',
-      deadline: '2026-08-22',
-      status: 'in_progress'
-    },
-    {
-      id: '4',
-      title: 'Distribution of pre-assessment tokens',
-      description: 'Send test credentials to registered candidates via portal.',
-      department: 'CSE',
-      deadline: '2026-08-18',
-      status: 'done'
-    }
-  ]);
-
-  const [placements, setPlacements] = useState([
-    {
-      id: '1',
-      student_name: 'Priya Sharma',
-      company: 'Zoho Corporation',
-      role: 'Software Development Engineer',
-      package: '8.5 LPA',
-      department: 'CSE',
-      quote: 'Consistent LeetCode practice and mock interviews with alumni were key to cracking the technical rounds!'
-    },
-    {
-      id: '2',
-      student_name: 'Karthik Raja',
-      company: 'Virtusa',
-      role: 'Associate Engineer',
-      package: '6.0 LPA',
-      department: 'CSE',
-      quote: 'Focusing on core CS fundamentals and DBMS concurrency models gave me a clear edge during HR and Tech rounds.'
-    },
-    {
-      id: '3',
-      student_name: 'Ananya Nair',
-      company: 'TCS Digital',
-      role: 'Systems Engineer',
-      package: '7.2 LPA',
-      department: 'ECE',
-      quote: 'The portal preparation decks and time-bound mock aptitude tests helped me boost my speed and accuracy.'
-    }
-  ]);
-
-  // Flashcards for Interactive Study Widget
+  // Daily Tech Interview Flashcards
   const flashcards = [
     {
       q: "What is the difference between Synchronous and Asynchronous execution?",
-      a: "Synchronous execution blocks the execution thread until the current task finishes, while Asynchronous execution permits other operations to run concurrently while waiting for operations to complete."
+      a: "Synchronous execution blocks the thread until the task finishes, while Asynchronous execution permits other operations to run concurrently."
     },
     {
       q: "Explain ACID properties in Relational Databases.",
-      a: "Atomicity (all or nothing), Consistency (valid state), Isolation (concurrent execution equality), and Durability (committed changes persist even during crash)."
+      a: "Atomicity (all or nothing), Consistency (valid state), Isolation (concurrent execution equality), and Durability (committed changes persist)."
     },
     {
       q: "What is the STAR method for Behavioral Interviews?",
-      a: "Situation (set the context), Task (describe your responsibility), Action (explain exact steps taken), and Result (share measurable outcome)."
+      a: "Situation (context), Task (responsibility), Action (steps taken), and Result (measurable outcome)."
     },
     {
-      q: "What is the purpose of Indexes in Database Management Systems?",
-      a: "Indexes speed up data retrieval by creating data structures (e.g. B-Trees) that allow fast lookup without scanning every row in a table."
+      q: "What is the purpose of Database Indexing?",
+      a: "Indexes speed up data retrieval by creating data structures (e.g. B-Trees) allowing fast lookups without full table scans."
     }
   ];
 
-  // Fetch from Supabase on mount if configured
+  // Fetch real data from Supabase backend
+  const fetchAllData = async () => {
+    setLoading(true);
+    try {
+      const { data: noticesData, error: noticesErr } = await supabase
+        .from('notices')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!noticesErr && noticesData) setNotices(noticesData);
+
+      const { data: tasksData, error: tasksErr } = await supabase
+        .from('tasks')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!tasksErr && tasksData) setTasks(tasksData);
+
+      const { data: resourcesData, error: resourcesErr } = await supabase
+        .from('resources')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!resourcesErr && resourcesData) setResources(resourcesData);
+
+      const { data: placementsData, error: placementsErr } = await supabase
+        .from('placements')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!placementsErr && placementsData) setPlacements(placementsData);
+    } catch (err) {
+      console.error('Error fetching data from Supabase:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (client && !client.isFallback) {
-          const { data: noticesData } = await client.from('notices').select('*').order('created_at', { ascending: false });
-          if (noticesData && noticesData.length > 0) setNotices(noticesData);
-
-          const { data: tasksData } = await client.from('tasks').select('*');
-          if (tasksData && tasksData.length > 0) setTasks(tasksData);
-
-          const { data: resourcesData } = await client.from('resources').select('*');
-          if (resourcesData && resourcesData.length > 0) setResources(resourcesData);
-
-          const { data: placementsData } = await client.from('placements').select('*');
-          if (placementsData && placementsData.length > 0) setPlacements(placementsData);
-        }
-      } catch (err) {
-        console.log('Using local fallback data');
-      }
-    };
-    fetchData();
-  }, [client]);
+    fetchAllData();
+  }, []);
 
   // Hotkey listener for Command Palette (⌘K or Ctrl+K)
   useEffect(() => {
@@ -396,11 +282,10 @@ export default function App() {
     }
 
     try {
-      if (client && !client.isFallback) {
-        await client.from('tasks').update({ status: newStatus }).eq('id', taskId);
-      }
+      const { error } = await supabase.from('tasks').update({ status: newStatus }).eq('id', taskId);
+      if (error) console.error('Error updating task status:', error);
     } catch (e) {
-      console.log('Saved locally');
+      console.error(e);
     }
   };
 
@@ -418,83 +303,122 @@ export default function App() {
   const handleCreateNotice = async (e) => {
     e.preventDefault();
     playAudioFeedback('success');
-    const item = { 
-      ...newNotice, 
-      id: Date.now().toString(), 
-      created_at: new Date().toISOString(), 
-      posted_by: currentRole === 'coordinator' ? 'Placement Cell Coordinator' : 'Club Student' 
+    const item = {
+      title: newNotice.title,
+      content: newNotice.content,
+      category: newNotice.category,
+      attachment_url: newNotice.attachment_url || null,
+      posted_by: currentRole === 'coordinator' ? 'Placement Cell Coordinator' : 'Club Student'
     };
-    setNotices([item, ...notices]);
+
+    try {
+      const { data, error } = await supabase.from('notices').insert([item]).select();
+      if (!error && data) {
+        setNotices([data[0], ...notices]);
+      } else {
+        setNotices([{ ...item, id: Date.now().toString(), created_at: new Date().toISOString() }, ...notices]);
+      }
+    } catch (err) {
+      setNotices([{ ...item, id: Date.now().toString(), created_at: new Date().toISOString() }, ...notices]);
+    }
+
     setIsNoticeModalOpen(false);
     setNewNotice({ title: '', content: '', category: 'General', attachment_url: '' });
-    showToast('Broadcast Notice Published successfully!');
-    try { 
-      if (client && !client.isFallback) await client.from('notices').insert([item]); 
-    } catch (err) {}
+    showToast('Broadcast Notice Published to database!');
   };
 
   const handleCreateTask = async (e) => {
     e.preventDefault();
     playAudioFeedback('success');
-    const item = { ...newTask, id: Date.now().toString() };
-    setTasks([item, ...tasks]);
+    const item = {
+      title: newTask.title,
+      description: newTask.description,
+      department: newTask.department,
+      deadline: newTask.deadline || new Date().toISOString().split('T')[0],
+      status: newTask.status || 'todo'
+    };
+
+    try {
+      const { data, error } = await supabase.from('tasks').insert([item]).select();
+      if (!error && data) {
+        setTasks([data[0], ...tasks]);
+      } else {
+        setTasks([{ ...item, id: Date.now().toString() }, ...tasks]);
+      }
+    } catch (err) {
+      setTasks([{ ...item, id: Date.now().toString() }, ...tasks]);
+    }
+
     setIsTaskModalOpen(false);
     setNewTask({ title: '', description: '', department: 'CSE', deadline: '', status: 'todo' });
-    showToast('New Department Task created!');
-    try { 
-      if (client && !client.isFallback) await client.from('tasks').insert([item]); 
-    } catch (err) {}
+    showToast('Department Task created in database!');
   };
 
   const handleCreateResource = async (e) => {
     e.preventDefault();
     playAudioFeedback('success');
-    const item = { ...newResource, id: Date.now().toString(), size: '2.1 MB' };
-    setResources([item, ...resources]);
+    const item = {
+      title: newResource.title,
+      category: newResource.category,
+      month: newResource.month,
+      file_url: newResource.file_url || '#',
+      size: '2.5 MB',
+      uploaded_by: currentRole === 'coordinator' ? 'Coordinator' : 'Club Student'
+    };
+
+    try {
+      const { data, error } = await supabase.from('resources').insert([item]).select();
+      if (!error && data) {
+        setResources([data[0], ...resources]);
+      } else {
+        setResources([{ ...item, id: Date.now().toString() }, ...resources]);
+      }
+    } catch (err) {
+      setResources([{ ...item, id: Date.now().toString() }, ...resources]);
+    }
+
     setIsResourceModalOpen(false);
     setNewResource({ title: '', category: 'Technical', month: 'August 2026', file_url: '' });
-    showToast('Study Material uploaded to repository!');
-    try { 
-      if (client && !client.isFallback) await client.from('resources').insert([item]); 
-    } catch (err) {}
+    showToast('Study Material uploaded to backend!');
   };
 
   const handleCreatePlacement = async (e) => {
     e.preventDefault();
     fireCelebration();
-    const item = { ...newPlacement, id: Date.now().toString() };
-    setPlacements([item, ...placements]);
+    const item = {
+      student_name: newPlacement.student_name,
+      company: newPlacement.company,
+      role: newPlacement.role,
+      package: newPlacement.package,
+      department: newPlacement.department,
+      quote: newPlacement.quote
+    };
+
+    try {
+      const { data, error } = await supabase.from('placements').insert([item]).select();
+      if (!error && data) {
+        setPlacements([data[0], ...placements]);
+      } else {
+        setPlacements([{ ...item, id: Date.now().toString() }, ...placements]);
+      }
+    } catch (err) {
+      setPlacements([{ ...item, id: Date.now().toString() }, ...placements]);
+    }
+
     setIsPlacementModalOpen(false);
     setNewPlacement({ student_name: '', company: '', role: '', package: '', department: 'CSE', quote: '' });
-    showToast('Placement Record added! 🎉');
-    try {
-      if (client && !client.isFallback) await client.from('placements').insert([item]);
-    } catch (err) {}
+    showToast('Placement Record published! 🎉');
   };
 
-  const handleConnectSupabase = (e) => {
-    e.preventDefault();
-    if (supabaseUrl && supabaseKey) {
-      const newClient = getSupabaseClient(supabaseUrl, supabaseKey);
-      setClient(newClient);
-      setIsSupabaseModalOpen(false);
-      fireCelebration();
-      showToast('Connected to live Supabase Backend!');
-    }
-  };
-
-  // Role Permissions
-  // HOD: Read-only oversight across all departments
-  // Coordinator: Full access (Admin)
-  // Club Student: Department-level access (Update tasks, post notices, upload resources)
-  // Student: View-only (Read-only tasks, view notices, view/download resources)
+  // Roles permissions:
+  // HOD: Read-only oversight
+  // Coordinator: Full Admin
+  // Club Student: Dept task updates, notices, resources
+  // Student: View-only
   const canManageAll = currentRole === 'coordinator';
   const canPostNotices = currentRole === 'coordinator' || currentRole === 'club_student';
   const canUpdateDepartmentTasks = currentRole === 'coordinator' || currentRole === 'club_student';
 
-  // Task filtering rules by role:
-  // HOD and Coordinator see tasks across all departments.
-  // Club Student & Student see tasks for their selected/assigned department.
   const filteredTasks = tasks.filter(t => {
     if (currentRole === 'hod' || currentRole === 'coordinator') return true;
     return t.department === currentDept;
@@ -533,10 +457,10 @@ export default function App() {
             </div>
           </div>
 
-          {/* Quick Search Trigger, Dept Selector & Controls */}
+          {/* Quick Search, Dept Selector & Role Switcher */}
           <div className="flex items-center gap-3">
             
-            {/* Quick Command Palette Button */}
+            {/* Command Palette Button */}
             <button
               onClick={() => { setIsCommandOpen(true); playAudioFeedback('click'); }}
               className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border border-[#E8DFD8] bg-white text-xs font-semibold text-[#8C7A70] hover:border-[#2B1810] hover:text-[#2B1810] transition-all shadow-sm group"
@@ -577,7 +501,9 @@ export default function App() {
                 title="Notifications"
               >
                 <Bell className="w-4 h-4" />
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-amber-600 rounded-full ring-2 ring-[#FAF8F5]" />
+                {notices.length > 0 && (
+                  <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-amber-600 rounded-full ring-2 ring-[#FAF8F5]" />
+                )}
               </button>
 
               {/* Notification Drawer Popover */}
@@ -590,33 +516,24 @@ export default function App() {
                     </span>
                   </div>
                   <div className="mt-3 space-y-3 max-h-64 overflow-y-auto">
-                    {notices.map(n => (
-                      <div 
-                        key={n.id} 
-                        onClick={() => { setActiveTab('notices'); setIsNotificationDrawerOpen(false); }}
-                        className="p-2.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD8] hover:border-[#2B1810] transition-colors cursor-pointer text-left"
-                      >
-                        <div className="text-[10px] font-bold text-[#8C7A70] uppercase">{n.category}</div>
-                        <div className="text-xs font-bold text-[#2B1810] truncate mt-0.5">{n.title}</div>
-                      </div>
-                    ))}
+                    {notices.length === 0 ? (
+                      <div className="text-xs text-[#8C7A70] py-4 text-center">No circulars posted yet</div>
+                    ) : (
+                      notices.map(n => (
+                        <div 
+                          key={n.id} 
+                          onClick={() => { setActiveTab('notices'); setIsNotificationDrawerOpen(false); }}
+                          className="p-2.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD8] hover:border-[#2B1810] transition-colors cursor-pointer text-left"
+                        >
+                          <div className="text-[10px] font-bold text-[#8C7A70] uppercase">{n.category}</div>
+                          <div className="text-xs font-bold text-[#2B1810] truncate mt-0.5">{n.title}</div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
             </div>
-
-            {/* Supabase Connection Status / Setup Button */}
-            <button
-              onClick={() => { setIsSupabaseModalOpen(true); playAudioFeedback('click'); }}
-              className={`p-2.5 rounded-full border transition-all ${
-                client && !client.isFallback
-                  ? 'border-emerald-500 bg-emerald-50 text-emerald-800'
-                  : 'border-[#E8DFD8] bg-white text-[#8C7A70] hover:border-[#2B1810]'
-              }`}
-              title={client && !client.isFallback ? 'Supabase Backend Connected' : 'Configure Supabase Credentials'}
-            >
-              <Database className="w-4 h-4" />
-            </button>
 
             {/* Role Switcher Matrix (4 User Roles from Requirements) */}
             <div className="flex items-center gap-2 bg-white border border-[#E8DFD8] rounded-full p-1 pl-3 shadow-sm hover:border-[#2B1810] transition-colors">
@@ -628,7 +545,7 @@ export default function App() {
                   playAudioFeedback('click');
                   showToast(`Role switched to: ${
                     e.target.value === 'hod' ? 'HOD (Executive Read-Only Oversight)' :
-                    e.target.value === 'coordinator' ? 'Placement Cell Coordinator (Admin)' :
+                    e.target.value === 'coordinator' ? 'Placement Coordinator (Admin)' :
                     e.target.value === 'club_student' ? 'Club Student (Dept Manager)' :
                     'Student (View-Only Portal)'
                   }`);
@@ -657,7 +574,7 @@ export default function App() {
               Institutional <span className="font-serif italic font-normal">Placement & Task</span> Hub
             </h2>
             <p className="text-sm sm:text-base text-[#6E5A50] leading-relaxed max-w-2xl">
-              Role-restricted digital platform replacing Excel sheets and WhatsApp messages with a permanent, searchable hub for department tasks, verified circulars, notes, and PPTs.
+              Role-restricted digital platform connected with your Supabase database for department tasks, verified notice circulars, study notes, and placement records.
             </p>
           </div>
 
@@ -668,14 +585,18 @@ export default function App() {
               className="bg-white border border-[#E8DFD8] hover:border-[#2B1810] p-4 sm:p-5 rounded-2xl min-w-[110px] shadow-sm cursor-pointer transform hover:-translate-y-1 transition-all"
             >
               <div className="text-[10px] uppercase tracking-wider font-extrabold text-[#8C7A70]">Notices</div>
-              <div className="text-2xl sm:text-3xl font-serif font-bold text-[#2B1810] mt-1">{notices.length}</div>
+              <div className="text-2xl sm:text-3xl font-serif font-bold text-[#2B1810] mt-1">
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : notices.length}
+              </div>
             </div>
             <div 
               onClick={() => { setActiveTab('resources'); playAudioFeedback('click'); }}
               className="bg-white border border-[#E8DFD8] hover:border-[#2B1810] p-4 sm:p-5 rounded-2xl min-w-[110px] shadow-sm cursor-pointer transform hover:-translate-y-1 transition-all"
             >
               <div className="text-[10px] uppercase tracking-wider font-extrabold text-[#8C7A70]">Materials</div>
-              <div className="text-2xl sm:text-3xl font-serif font-bold text-[#2B1810] mt-1">{resources.length}</div>
+              <div className="text-2xl sm:text-3xl font-serif font-bold text-[#2B1810] mt-1">
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : resources.length}
+              </div>
             </div>
             <div 
               onClick={() => { fireCelebration(); setActiveTab('placements'); }}
@@ -683,7 +604,7 @@ export default function App() {
             >
               <div className="text-[10px] uppercase tracking-wider font-extrabold text-[#C7B7AC]">Placed</div>
               <div className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1 flex items-center justify-between">
-                {placements.length}
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : placements.length}
                 <PartyPopper className="w-4 h-4 text-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </div>
@@ -781,58 +702,80 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="space-y-4">
-                  {notices.slice(0, 3).map((notice) => (
-                    <div 
-                      key={notice.id}
-                      className="bg-white border border-[#E8DFD8] p-6 rounded-2xl hover:border-[#2B1810] transition-all hover:shadow-md group relative"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="space-y-2 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] text-[#2B1810]">
-                              {notice.category}
-                            </span>
-                            <span className="text-xs text-[#8C7A70]">
-                              {new Date(notice.created_at).toLocaleDateString()}
-                            </span>
+                {loading ? (
+                  <div className="p-8 bg-white border border-[#E8DFD8] rounded-2xl flex items-center justify-center text-xs text-[#8C7A70] gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-[#2B1810]" /> Loading notices from database...
+                  </div>
+                ) : notices.length === 0 ? (
+                  <div className="bg-white border border-[#E8DFD8] p-8 rounded-2xl text-center space-y-3">
+                    <AlertCircle className="w-8 h-8 text-[#8C7A70] mx-auto" />
+                    <div className="text-sm font-bold text-[#2B1810]">No announcements published yet</div>
+                    <p className="text-xs text-[#6E5A50]">
+                      {canPostNotices ? 'Click the button below to post the first broadcast notice.' : 'Check back later for placement notices.'}
+                    </p>
+                    {canPostNotices && (
+                      <button
+                        onClick={() => { setIsNoticeModalOpen(true); playAudioFeedback('click'); }}
+                        className="px-4 py-2 bg-[#2B1810] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#3D2314]"
+                      >
+                        + Post First Notice
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {notices.slice(0, 3).map((notice) => (
+                      <div 
+                        key={notice.id}
+                        className="bg-white border border-[#E8DFD8] p-6 rounded-2xl hover:border-[#2B1810] transition-all hover:shadow-md group relative"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] text-[#2B1810]">
+                                {notice.category}
+                              </span>
+                              <span className="text-xs text-[#8C7A70]">
+                                {notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Just now'}
+                              </span>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2B1810] leading-snug group-hover:text-[#3D2314]">
+                              {notice.title}
+                            </h4>
+                            <p className="text-xs text-[#5A463C] leading-relaxed">
+                              {notice.content}
+                            </p>
                           </div>
-                          <h4 className="text-base font-bold text-[#2B1810] leading-snug group-hover:text-[#3D2314]">
-                            {notice.title}
-                          </h4>
-                          <p className="text-xs text-[#5A463C] leading-relaxed">
-                            {notice.content}
-                          </p>
-                        </div>
 
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => toggleBookmark(notice.id)}
-                            className="p-2.5 rounded-full border border-[#E8DFD8] bg-[#FAF8F5] hover:border-[#2B1810] text-[#2B1810] transition-colors"
-                            title="Save Notice"
-                          >
-                            {bookmarkedNotices.includes(notice.id) ? (
-                              <BookmarkCheck className="w-4 h-4 text-[#2B1810]" />
-                            ) : (
-                              <Bookmark className="w-4 h-4 text-[#8C7A70]" />
-                            )}
-                          </button>
-
-                          {notice.attachment_url && (
-                            <a 
-                              href={notice.attachment_url} 
-                              onClick={() => showToast('Downloading Notice Circular...')}
-                              className="p-2.5 rounded-full border border-[#E8DFD8] bg-[#FAF8F5] hover:bg-[#2B1810] hover:text-white transition-colors"
-                              title="Download Attachment"
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => toggleBookmark(notice.id)}
+                              className="p-2.5 rounded-full border border-[#E8DFD8] bg-[#FAF8F5] hover:border-[#2B1810] text-[#2B1810] transition-colors"
+                              title="Save Notice"
                             >
-                              <Download className="w-4 h-4" />
-                            </a>
-                          )}
+                              {bookmarkedNotices.includes(notice.id) ? (
+                                <BookmarkCheck className="w-4 h-4 text-[#2B1810]" />
+                              ) : (
+                                <Bookmark className="w-4 h-4 text-[#8C7A70]" />
+                              )}
+                            </button>
+
+                            {notice.attachment_url && (
+                              <a 
+                                href={notice.attachment_url} 
+                                onClick={() => showToast('Downloading Notice Circular...')}
+                                className="p-2.5 rounded-full border border-[#E8DFD8] bg-[#FAF8F5] hover:bg-[#2B1810] hover:text-white transition-colors"
+                                title="Download Attachment"
+                              >
+                                <Download className="w-4 h-4" />
+                              </a>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Department Task Board Summary */}
@@ -849,51 +792,71 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="bg-white border border-[#E8DFD8] rounded-2xl divide-y divide-[#E8DFD8] overflow-hidden shadow-sm">
-                  {filteredTasks.slice(0, 4).map((task) => (
-                    <div key={task.id} className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-[#FAF8F5] transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-[#2B1810]">{task.title}</span>
-                          <span className="text-[10px] uppercase font-bold text-[#8C7A70] bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#E8DFD8]">
-                            {task.department}
-                          </span>
+                {loading ? (
+                  <div className="p-8 bg-white border border-[#E8DFD8] rounded-2xl flex items-center justify-center text-xs text-[#8C7A70] gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-[#2B1810]" /> Loading department tasks...
+                  </div>
+                ) : filteredTasks.length === 0 ? (
+                  <div className="bg-white border border-[#E8DFD8] p-8 rounded-2xl text-center space-y-3">
+                    <CheckCircle2 className="w-8 h-8 text-[#8C7A70] mx-auto" />
+                    <div className="text-sm font-bold text-[#2B1810]">No active tasks found for {currentDept}</div>
+                    <p className="text-xs text-[#6E5A50]">Create a task to assign department responsibilities.</p>
+                    {canUpdateDepartmentTasks && (
+                      <button
+                        onClick={() => { setIsTaskModalOpen(true); playAudioFeedback('click'); }}
+                        className="px-4 py-2 bg-[#2B1810] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#3D2314]"
+                      >
+                        + Create First Task
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-white border border-[#E8DFD8] rounded-2xl divide-y divide-[#E8DFD8] overflow-hidden shadow-sm">
+                    {filteredTasks.slice(0, 4).map((task) => (
+                      <div key={task.id} className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-[#FAF8F5] transition-colors">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-[#2B1810]">{task.title}</span>
+                            <span className="text-[10px] uppercase font-bold text-[#8C7A70] bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#E8DFD8]">
+                              {task.department}
+                            </span>
+                          </div>
+                          <div className="text-xs text-[#8C7A70] mt-1">Deadline: {task.deadline}</div>
                         </div>
-                        <div className="text-xs text-[#8C7A70] mt-1">Deadline: {task.deadline}</div>
-                      </div>
 
-                      <div>
-                        {canUpdateDepartmentTasks ? (
-                          <select
-                            value={task.status}
-                            onChange={(e) => handleTaskStatusChange(task.id, e.target.value)}
-                            className={`px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider cursor-pointer focus:outline-none transition-colors ${
+                        <div>
+                          {canUpdateDepartmentTasks ? (
+                            <select
+                              value={task.status}
+                              onChange={(e) => handleTaskStatusChange(task.id, e.target.value)}
+                              className={`px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider cursor-pointer focus:outline-none transition-colors ${
+                                task.status === 'done' 
+                                  ? 'bg-[#2B1810] text-white' 
+                                  : task.status === 'in_progress' 
+                                  ? 'bg-[#EDE5DE] text-[#2B1810]' 
+                                  : 'bg-[#FAF8F5] text-[#8C7A70] border border-[#E8DFD8]'
+                              }`}
+                            >
+                              <option value="todo">To-Do</option>
+                              <option value="in_progress">In Progress</option>
+                              <option value="done">Done</option>
+                            </select>
+                          ) : (
+                            <span className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
                               task.status === 'done' 
                                 ? 'bg-[#2B1810] text-white' 
                                 : task.status === 'in_progress' 
                                 ? 'bg-[#EDE5DE] text-[#2B1810]' 
                                 : 'bg-[#FAF8F5] text-[#8C7A70] border border-[#E8DFD8]'
-                            }`}
-                          >
-                            <option value="todo">To-Do</option>
-                            <option value="in_progress">In Progress</option>
-                            <option value="done">Done</option>
-                          </select>
-                        ) : (
-                          <span className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
-                            task.status === 'done' 
-                              ? 'bg-[#2B1810] text-white' 
-                              : task.status === 'in_progress' 
-                              ? 'bg-[#EDE5DE] text-[#2B1810]' 
-                              : 'bg-[#FAF8F5] text-[#8C7A70] border border-[#E8DFD8]'
-                          }`}>
-                            {task.status.replace('_', ' ')}
-                          </span>
-                        )}
+                            }`}>
+                              {task.status ? task.status.replace('_', ' ') : 'to do'}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
             </div>
@@ -912,21 +875,27 @@ export default function App() {
                 </div>
 
                 <div className="mt-4 space-y-3">
-                  {placements.map((p) => (
-                    <div 
-                      key={p.id} 
-                      onClick={() => { setSelectedPlacement(p); playAudioFeedback('pop'); }}
-                      className="bg-[#3D2314] p-4 rounded-xl border border-[#4A3225] hover:border-[#D4AF37] transition-all cursor-pointer flex items-center justify-between group/card"
-                    >
-                      <div>
-                        <div className="text-xs font-bold text-white group-hover/card:text-[#D4AF37] transition-colors">{p.student_name}</div>
-                        <div className="text-[11px] text-[#C7B7AC]">{p.company} • {p.role}</div>
-                      </div>
-                      <div className="text-xs font-serif font-bold text-[#FAF8F5] bg-[#2B1810] px-2.5 py-1 rounded-lg border border-[#4A3225]">
-                        {p.package}
-                      </div>
+                  {placements.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-[#C7B7AC] italic">
+                      No placements recorded yet.
                     </div>
-                  ))}
+                  ) : (
+                    placements.map((p) => (
+                      <div 
+                        key={p.id} 
+                        onClick={() => { setSelectedPlacement(p); playAudioFeedback('pop'); }}
+                        className="bg-[#3D2314] p-4 rounded-xl border border-[#4A3225] hover:border-[#D4AF37] transition-all cursor-pointer flex items-center justify-between group/card"
+                      >
+                        <div>
+                          <div className="text-xs font-bold text-white group-hover/card:text-[#D4AF37] transition-colors">{p.student_name}</div>
+                          <div className="text-[11px] text-[#C7B7AC]">{p.company} • {p.role}</div>
+                        </div>
+                        <div className="text-xs font-serif font-bold text-[#FAF8F5] bg-[#2B1810] px-2.5 py-1 rounded-lg border border-[#4A3225]">
+                          {p.package}
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -1007,41 +976,67 @@ export default function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {notices
-                .filter(n => selectedCategory === 'All' || n.category === selectedCategory)
-                .filter(n => n.title.toLowerCase().includes(searchQuery.toLowerCase()) || n.content.toLowerCase().includes(searchQuery.toLowerCase()))
-                .map((notice) => (
-                  <div key={notice.id} className="bg-white border border-[#E8DFD8] p-6 rounded-2xl flex flex-col justify-between hover:border-[#2B1810] transition-all hover:shadow-md">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] text-[#2B1810]">
-                          {notice.category}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-[#8C7A70]">{new Date(notice.created_at).toLocaleDateString()}</span>
-                          <button onClick={() => toggleBookmark(notice.id)} className="text-[#2B1810]">
-                            {bookmarkedNotices.includes(notice.id) ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4 text-[#8C7A70]" />}
-                          </button>
+            {loading ? (
+              <div className="p-12 bg-white border border-[#E8DFD8] rounded-2xl flex items-center justify-center text-xs text-[#8C7A70] gap-2">
+                <Loader2 className="w-5 h-5 animate-spin text-[#2B1810]" /> Loading notice circulars...
+              </div>
+            ) : notices.length === 0 ? (
+              <div className="bg-white border border-[#E8DFD8] p-12 rounded-3xl text-center space-y-4">
+                <AlertCircle className="w-10 h-10 text-[#8C7A70] mx-auto" />
+                <h3 className="text-base font-bold text-[#2B1810]">No Broadcast Notices Available</h3>
+                <p className="text-xs text-[#6E5A50] max-w-sm mx-auto">
+                  {canPostNotices 
+                    ? 'Publish the first announcement to notify all registered students.' 
+                    : 'The Training & Placement team has not published any notices yet.'}
+                </p>
+                {canPostNotices && (
+                  <button
+                    onClick={() => { setIsNoticeModalOpen(true); playAudioFeedback('click'); }}
+                    className="px-5 py-2.5 bg-[#2B1810] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#3D2314]"
+                  >
+                    + Publish Notice
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {notices
+                  .filter(n => selectedCategory === 'All' || n.category === selectedCategory)
+                  .filter(n => n.title.toLowerCase().includes(searchQuery.toLowerCase()) || n.content.toLowerCase().includes(searchQuery.toLowerCase()))
+                  .map((notice) => (
+                    <div key={notice.id} className="bg-white border border-[#E8DFD8] p-6 rounded-2xl flex flex-col justify-between hover:border-[#2B1810] transition-all hover:shadow-md">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] text-[#2B1810]">
+                            {notice.category}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-[#8C7A70]">
+                              {notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Today'}
+                            </span>
+                            <button onClick={() => toggleBookmark(notice.id)} className="text-[#2B1810]">
+                              {bookmarkedNotices.includes(notice.id) ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4 text-[#8C7A70]" />}
+                            </button>
+                          </div>
                         </div>
+                        <h4 className="text-base font-bold text-[#2B1810] mb-2">{notice.title}</h4>
+                        <p className="text-xs text-[#5A463C] leading-relaxed">{notice.content}</p>
                       </div>
-                      <h4 className="text-base font-bold text-[#2B1810] mb-2">{notice.title}</h4>
-                      <p className="text-xs text-[#5A463C] leading-relaxed">{notice.content}</p>
+                      {notice.attachment_url && (
+                        <div className="mt-6 pt-4 border-t border-[#E8DFD8] flex justify-end">
+                          <a 
+                            href={notice.attachment_url} 
+                            onClick={() => showToast('Downloading notice attachment...')}
+                            className="text-xs font-bold uppercase tracking-wider text-[#2B1810] hover:underline inline-flex items-center gap-1"
+                          >
+                            <Download className="w-3.5 h-3.5" /> Download Attachment
+                          </a>
+                        </div>
+                      )}
                     </div>
-                    {notice.attachment_url && (
-                      <div className="mt-6 pt-4 border-t border-[#E8DFD8] flex justify-end">
-                        <a 
-                          href={notice.attachment_url} 
-                          onClick={() => showToast('Downloading notice attachment...')}
-                          className="text-xs font-bold uppercase tracking-wider text-[#2B1810] hover:underline inline-flex items-center gap-1"
-                        >
-                          <Download className="w-3.5 h-3.5" /> Download Attachment
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                ))}
-            </div>
+                  ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1067,33 +1062,55 @@ export default function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {resources
-                .filter(res => selectedResourceCategory === 'All' || res.category === selectedResourceCategory)
-                .map((res) => (
-                  <div key={res.id} className="bg-white border border-[#E8DFD8] p-6 rounded-2xl hover:border-[#2B1810] transition-all hover:shadow-md flex flex-col justify-between">
-                    <div>
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] px-2.5 py-1 rounded-md text-[#2B1810]">
-                          {res.category}
-                        </span>
-                        <span className="text-xs text-[#8C7A70]">{res.month}</span>
+            {loading ? (
+              <div className="p-12 bg-white border border-[#E8DFD8] rounded-2xl flex items-center justify-center text-xs text-[#8C7A70] gap-2">
+                <Loader2 className="w-5 h-5 animate-spin text-[#2B1810]" /> Loading study resources...
+              </div>
+            ) : resources.length === 0 ? (
+              <div className="bg-white border border-[#E8DFD8] p-12 rounded-3xl text-center space-y-4">
+                <BookOpen className="w-10 h-10 text-[#8C7A70] mx-auto" />
+                <h3 className="text-base font-bold text-[#2B1810]">No Study Materials Uploaded</h3>
+                <p className="text-xs text-[#6E5A50] max-w-sm mx-auto">
+                  {canManageAll ? 'Upload notes, PPTs, or practice decks for students.' : 'Notes and PPTs shared for HR sessions will appear here.'}
+                </p>
+                {canManageAll && (
+                  <button
+                    onClick={() => { setIsResourceModalOpen(true); playAudioFeedback('click'); }}
+                    className="px-5 py-2.5 bg-[#2B1810] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#3D2314]"
+                  >
+                    + Upload First Material
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {resources
+                  .filter(res => selectedResourceCategory === 'All' || res.category === selectedResourceCategory)
+                  .map((res) => (
+                    <div key={res.id} className="bg-white border border-[#E8DFD8] p-6 rounded-2xl hover:border-[#2B1810] transition-all hover:shadow-md flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] px-2.5 py-1 rounded-md text-[#2B1810]">
+                            {res.category}
+                          </span>
+                          <span className="text-xs text-[#8C7A70]">{res.month}</span>
+                        </div>
+                        <h4 className="text-base font-bold text-[#2B1810]">{res.title}</h4>
                       </div>
-                      <h4 className="text-base font-bold text-[#2B1810]">{res.title}</h4>
+                      <div className="mt-8 pt-4 border-t border-[#E8DFD8] flex items-center justify-between">
+                        <span className="text-xs text-[#8C7A70]">{res.size || '2.5 MB'}</span>
+                        <a
+                          href={res.file_url || '#'}
+                          onClick={() => showToast('Downloading study material deck...')}
+                          className="px-4 py-2 rounded-lg bg-[#2B1810] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#3D2314] transition-colors inline-flex items-center gap-1.5"
+                        >
+                          <Download className="w-3.5 h-3.5" /> Download
+                        </a>
+                      </div>
                     </div>
-                    <div className="mt-8 pt-4 border-t border-[#E8DFD8] flex items-center justify-between">
-                      <span className="text-xs text-[#8C7A70]">{res.size}</span>
-                      <a
-                        href={res.file_url || '#'}
-                        onClick={() => showToast('Downloading study material deck...')}
-                        className="px-4 py-2 rounded-lg bg-[#2B1810] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#3D2314] transition-colors inline-flex items-center gap-1.5"
-                      >
-                        <Download className="w-3.5 h-3.5" /> Download
-                      </a>
-                    </div>
-                  </div>
-                ))}
-            </div>
+                  ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1122,52 +1139,66 @@ export default function App() {
               </div>
             </div>
             
-            <div className="divide-y divide-[#E8DFD8]">
-              {filteredTasks.map((task) => (
-                <div key={task.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#FAF8F5] transition-colors">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#2B1810]">{task.title}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] px-2 py-0.5 rounded text-[#2B1810]">
-                        {task.department}
-                      </span>
+            {loading ? (
+              <div className="p-12 text-center text-xs text-[#8C7A70] flex items-center justify-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin text-[#2B1810]" /> Loading task board...
+              </div>
+            ) : filteredTasks.length === 0 ? (
+              <div className="p-12 text-center space-y-3">
+                <CheckCircle2 className="w-10 h-10 text-[#8C7A70] mx-auto" />
+                <div className="text-sm font-bold text-[#2B1810]">No Tasks Assigned</div>
+                <p className="text-xs text-[#6E5A50]">
+                  There are no tasks for {currentDept} in the database.
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-[#E8DFD8]">
+                {filteredTasks.map((task) => (
+                  <div key={task.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#FAF8F5] transition-colors">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-[#2B1810]">{task.title}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-[#EDE5DE] px-2 py-0.5 rounded text-[#2B1810]">
+                          {task.department}
+                        </span>
+                      </div>
+                      {task.description && <p className="text-xs text-[#5A463C]">{task.description}</p>}
+                      <div className="text-[11px] text-[#8C7A70]">Deadline: {task.deadline}</div>
                     </div>
-                    <p className="text-xs text-[#5A463C]">{task.description}</p>
-                    <div className="text-[11px] text-[#8C7A70]">Deadline: {task.deadline}</div>
-                  </div>
 
-                  <div>
-                    {canUpdateDepartmentTasks ? (
-                      <select
-                        value={task.status}
-                        onChange={(e) => handleTaskStatusChange(task.id, e.target.value)}
-                        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider cursor-pointer focus:outline-none transition-colors ${
+                    <div>
+                      {canUpdateDepartmentTasks ? (
+                        <select
+                          value={task.status}
+                          onChange={(e) => handleTaskStatusChange(task.id, e.target.value)}
+                          className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider cursor-pointer focus:outline-none transition-colors ${
+                            task.status === 'done' 
+                              ? 'bg-[#2B1810] text-white' 
+                              : task.status === 'in_progress' 
+                              ? 'bg-[#EDE5DE] text-[#2B1810]' 
+                              : 'bg-[#FAF8F5] text-[#8C7A70] border border-[#E8DFD8]'
+                          }`}
+                        >
+                          <option value="todo">Status: To-Do</option>
+                          <option value="in_progress">Status: In Progress</option>
+                          <option value="done">Status: Done</option>
+                        </select>
+                      ) : (
+                        <span className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                           task.status === 'done' 
                             ? 'bg-[#2B1810] text-white' 
                             : task.status === 'in_progress' 
                             ? 'bg-[#EDE5DE] text-[#2B1810]' 
                             : 'bg-[#FAF8F5] text-[#8C7A70] border border-[#E8DFD8]'
-                        }`}
-                      >
-                        <option value="todo">Status: To-Do</option>
-                        <option value="in_progress">Status: In Progress</option>
-                        <option value="done">Status: Done</option>
-                      </select>
-                    ) : (
-                      <span className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
-                        task.status === 'done' 
-                          ? 'bg-[#2B1810] text-white' 
-                          : task.status === 'in_progress' 
-                          ? 'bg-[#EDE5DE] text-[#2B1810]' 
-                          : 'bg-[#FAF8F5] text-[#8C7A70] border border-[#E8DFD8]'
-                      }`}>
-                        {task.status.replace('_', ' ')}
-                      </span>
-                    )}
+                        }`}>
+                          {task.status ? task.status.replace('_', ' ') : 'to do'}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1189,33 +1220,55 @@ export default function App() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {placements.map((p) => (
-                <div 
-                  key={p.id} 
-                  onClick={() => { setSelectedPlacement(p); playAudioFeedback('pop'); }}
-                  className="bg-white border border-[#E8DFD8] p-6 rounded-2xl hover:border-[#2B1810] transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group"
-                >
-                  <div>
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="w-12 h-12 rounded-full bg-[#FAF8F5] border border-[#E8DFD8] flex items-center justify-center font-bold font-serif text-lg text-[#2B1810] group-hover:bg-[#2B1810] group-hover:text-white transition-colors">
-                        {p.student_name.charAt(0)}
+            {loading ? (
+              <div className="p-12 bg-white border border-[#E8DFD8] rounded-2xl flex items-center justify-center text-xs text-[#8C7A70] gap-2">
+                <Loader2 className="w-5 h-5 animate-spin text-[#2B1810]" /> Loading placement records...
+              </div>
+            ) : placements.length === 0 ? (
+              <div className="bg-white border border-[#E8DFD8] p-12 rounded-3xl text-center space-y-4">
+                <Trophy className="w-10 h-10 text-[#8C7A70] mx-auto" />
+                <h3 className="text-base font-bold text-[#2B1810]">No Placement Achievements Recorded</h3>
+                <p className="text-xs text-[#6E5A50] max-w-sm mx-auto">
+                  {canManageAll ? 'Click below to record verified student placements.' : 'Check back later for placement achievements.'}
+                </p>
+                {canManageAll && (
+                  <button
+                    onClick={() => { setIsPlacementModalOpen(true); playAudioFeedback('click'); }}
+                    className="px-5 py-2.5 bg-[#2B1810] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#3D2314]"
+                  >
+                    + Record First Placement
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {placements.map((p) => (
+                  <div 
+                    key={p.id} 
+                    onClick={() => { setSelectedPlacement(p); playAudioFeedback('pop'); }}
+                    className="bg-white border border-[#E8DFD8] p-6 rounded-2xl hover:border-[#2B1810] transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="w-12 h-12 rounded-full bg-[#FAF8F5] border border-[#E8DFD8] flex items-center justify-center font-bold font-serif text-lg text-[#2B1810] group-hover:bg-[#2B1810] group-hover:text-white transition-colors">
+                          {p.student_name ? p.student_name.charAt(0) : 'P'}
+                        </div>
+                        <span className="text-xs font-serif font-bold text-[#2B1810] bg-[#EDE5DE] px-3 py-1 rounded-full">
+                          {p.package}
+                        </span>
                       </div>
-                      <span className="text-xs font-serif font-bold text-[#2B1810] bg-[#EDE5DE] px-3 py-1 rounded-full">
-                        {p.package}
-                      </span>
+                      <h4 className="text-lg font-bold text-[#2B1810]">{p.student_name}</h4>
+                      <div className="text-xs font-semibold text-[#5A463C] mt-1">{p.company}</div>
+                      <div className="text-xs text-[#8C7A70] mt-0.5">{p.role} • {p.department}</div>
                     </div>
-                    <h4 className="text-lg font-bold text-[#2B1810]">{p.student_name}</h4>
-                    <div className="text-xs font-semibold text-[#5A463C] mt-1">{p.company}</div>
-                    <div className="text-xs text-[#8C7A70] mt-0.5">{p.role} • {p.department}</div>
+                    <div className="mt-6 pt-4 border-t border-[#E8DFD8] text-[11px] text-[#8C7A70] flex items-center justify-between font-bold uppercase tracking-wider">
+                      <span className="flex items-center gap-1.5"><UserCheck className="w-4 h-4 text-[#2B1810]" /> Verified Record</span>
+                      <ChevronRight className="w-4 h-4 text-[#8C7A70] group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-[#E8DFD8] text-[11px] text-[#8C7A70] flex items-center justify-between font-bold uppercase tracking-wider">
-                    <span className="flex items-center gap-1.5"><UserCheck className="w-4 h-4 text-[#2B1810]" /> Verified Record</span>
-                    <ChevronRight className="w-4 h-4 text-[#8C7A70] group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1278,7 +1331,7 @@ export default function App() {
             </button>
 
             <div className="w-16 h-16 rounded-full bg-[#2B1810] text-[#FAF8F5] text-2xl font-serif font-bold flex items-center justify-center mx-auto mb-3 shadow-md">
-              {selectedPlacement.student_name.charAt(0)}
+              {selectedPlacement.student_name ? selectedPlacement.student_name.charAt(0) : 'P'}
             </div>
 
             <span className="text-xs font-bold uppercase tracking-wider bg-[#EDE5DE] text-[#2B1810] px-3 py-1 rounded-full">
@@ -1304,54 +1357,6 @@ export default function App() {
             >
               <PartyPopper className="w-4 h-4 text-[#D4AF37]" /> Celebrate Milestone
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* SUPABASE SETTINGS MODAL */}
-      {isSupabaseModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#2B1810]/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white border border-[#E8DFD8] rounded-3xl p-6 w-full max-w-lg shadow-2xl relative">
-            <button onClick={() => setIsSupabaseModalOpen(false)} className="absolute top-5 right-5 text-[#8C7A70] hover:text-[#2B1810]">
-              <X className="w-5 h-5" />
-            </button>
-            <div className="flex items-center gap-2 text-xs font-bold text-[#2B1810] uppercase mb-1">
-              <Database className="w-4 h-4 text-[#D4AF37]" /> Backend Setup
-            </div>
-            <h3 className="text-lg font-bold text-[#2B1810] mb-2">Connect Supabase PostgreSQL</h3>
-            <p className="text-xs text-[#6E5A50] mb-4 leading-relaxed">
-              Enter your Supabase project URL and anon public key to connect authentication, storage, and database persistence.
-            </p>
-            <form onSubmit={handleConnectSupabase} className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-[#2B1810] uppercase">Supabase Project URL</label>
-                <input 
-                  type="url" 
-                  required
-                  placeholder="https://your-project.supabase.co"
-                  value={supabaseUrl}
-                  onChange={(e) => setSupabaseUrl(e.target.value)}
-                  className="w-full mt-1 p-2.5 bg-[#FAF8F5] border border-[#E8DFD8] rounded-xl text-xs text-[#2B1810] focus:outline-none focus:border-[#2B1810]"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-[#2B1810] uppercase">Supabase Anon Key</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="eyJhbGciOiJIUzI1NiIsIn..."
-                  value={supabaseKey}
-                  onChange={(e) => setSupabaseKey(e.target.value)}
-                  className="w-full mt-1 p-2.5 bg-[#FAF8F5] border border-[#E8DFD8] rounded-xl text-xs text-[#2B1810] focus:outline-none focus:border-[#2B1810]"
-                />
-              </div>
-              <div className="p-3 bg-[#FAF8F5] border border-[#E8DFD8] rounded-xl text-[11px] text-[#5A463C]">
-                💡 You can also execute the database tables script inside <code className="bg-[#EDE5DE] px-1 rounded">supabase_schema.sql</code> in your Supabase SQL Editor.
-              </div>
-              <button type="submit" className="w-full py-3 bg-[#2B1810] text-white rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#3D2314]">
-                Save & Connect Backend
-              </button>
-            </form>
           </div>
         </div>
       )}
