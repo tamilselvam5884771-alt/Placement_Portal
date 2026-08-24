@@ -123,7 +123,7 @@ const ConfettiCanvas = ({ active, onComplete }) => {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const colors = ['#3B82F6', '#60A5FA', '#93C5FD', '#F59E0B', '#10B981', '#8B5CF6'];
+    const colors = ['#E11D48', '#F43F5E', '#FB7185', '#FDA4AF', '#BE123C', '#9F1239'];
 
     for (let i = 0; i < 110; i++) {
       particles.push({
@@ -513,20 +513,20 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[#07090E] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white relative overflow-x-hidden bg-line-grid">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans antialiased selection:bg-rose-600 selection:text-white relative overflow-x-hidden bg-line-grid">
       
       {/* Confetti Celebration Canvas Layer */}
       <ConfettiCanvas active={triggerConfetti} onComplete={() => setTriggerConfetti(false)} />
 
       {/* Floating Ambient Glowing Spheres */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] glow-radial-blue pointer-events-none opacity-60 z-0" />
-      <div className="absolute top-[600px] right-0 w-[550px] h-[550px] glow-radial-purple pointer-events-none opacity-40 z-0" />
-      <div className="absolute top-[1600px] left-0 w-[600px] h-[600px] glow-radial-amber pointer-events-none opacity-30 z-0" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] glow-radial-crimson pointer-events-none opacity-60 z-0" />
+      <div className="absolute top-[600px] right-0 w-[550px] h-[550px] glow-radial-rose pointer-events-none opacity-40 z-0" />
+      <div className="absolute top-[1600px] left-0 w-[600px] h-[600px] glow-radial-ruby pointer-events-none opacity-30 z-0" />
 
       {/* Toast Feedback Banner */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#121829] text-white px-5 py-3 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-blue-500/40 flex items-center gap-3 text-xs font-semibold tracking-wide animate-in fade-in slide-in-from-bottom-4">
-          <Sparkles className="w-4 h-4 text-blue-400 animate-spin" />
+        <div className="fixed bottom-6 right-6 z-50 bg-white text-slate-900 px-5 py-3 rounded-2xl shadow-xl border border-rose-500/30 flex items-center gap-3 text-xs font-semibold tracking-wide animate-in fade-in slide-in-from-bottom-4">
+          <Sparkles className="w-4 h-4 text-rose-600 animate-spin" />
           {toastMessage}
         </div>
       )}
@@ -561,7 +561,7 @@ export default function App() {
 
       {/* Navigation Tabs Bar */}
       <section className="max-w-7xl mx-auto px-6 pt-10 pb-4">
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 border-b border-white/10">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 border-b border-slate-200">
           {[
             { id: 'overview', label: 'Overview & AI Desk', icon: Cpu },
             { id: 'drives', label: 'Hiring Drives Desk', icon: Briefcase },
@@ -579,8 +579,8 @@ export default function App() {
                 onClick={() => { setActiveTab(tab.id); playAudioFeedback('click'); }}
                 className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 whitespace-nowrap flex items-center gap-2 ${
                   activeTab === tab.id
-                    ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-105'
-                    : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 hover:text-white'
+                    ? 'bg-rose-600 text-white shadow-[0_0_20px_rgba(225,29,72,0.3)] scale-105'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 shadow-sm'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -592,15 +592,15 @@ export default function App() {
 
         {/* Dynamic Admin Control Bar */}
         {(canPostNotices || canManageAll) && (
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl cosmo-glass-card border border-blue-500/20">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-300">
-              <Shield className="w-4 h-4 text-blue-400" /> Admin Controls Active ({currentRole.replace('_', ' ')})
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl cosmo-glass-card border border-rose-500/20 bg-white shadow-sm">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-700">
+              <Shield className="w-4 h-4 text-rose-600" /> Admin Controls Active ({currentRole.replace('_', ' ')})
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               {canPostNotices && (
                 <button 
                   onClick={() => { setIsNoticeModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold tracking-wide transition-all transform hover:scale-105 inline-flex items-center gap-1.5 shadow-md"
+                  className="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold tracking-wide transition-all transform hover:scale-105 inline-flex items-center gap-1.5 shadow-md"
                 >
                   <Plus className="w-3.5 h-3.5" /> Post Circular
                 </button>
@@ -608,7 +608,7 @@ export default function App() {
               {canUpdateDepartmentTasks && (
                 <button 
                   onClick={() => { setIsTaskModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full border border-white/15 bg-white/5 text-slate-200 text-xs font-bold tracking-wide hover:bg-white/10 transition-all inline-flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-800 text-xs font-bold tracking-wide hover:bg-slate-50 transition-all inline-flex items-center gap-1.5 shadow-sm"
                 >
                   <Plus className="w-3.5 h-3.5" /> Assign Task
                 </button>
@@ -616,7 +616,7 @@ export default function App() {
               {canManageAll && (
                 <button 
                   onClick={() => { setIsResourceModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full border border-white/15 bg-white/5 text-slate-200 text-xs font-bold tracking-wide hover:bg-white/10 transition-all inline-flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-800 text-xs font-bold tracking-wide hover:bg-slate-50 transition-all inline-flex items-center gap-1.5 shadow-sm"
                 >
                   <Upload className="w-3.5 h-3.5" /> Upload Material
                 </button>
@@ -624,9 +624,9 @@ export default function App() {
               {canManageAll && (
                 <button 
                   onClick={() => { setIsPlacementModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 text-xs font-bold tracking-wide hover:bg-amber-500/20 transition-all inline-flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-full border border-rose-500/30 bg-rose-500/10 text-rose-700 text-xs font-bold tracking-wide hover:bg-rose-500/20 transition-all inline-flex items-center gap-1.5 shadow-sm"
                 >
-                  <Trophy className="w-3.5 h-3.5 text-amber-400" /> Publish Placed Candidate
+                  <Trophy className="w-3.5 h-3.5 text-rose-600" /> Publish Placed Candidate
                 </button>
               )}
             </div>
@@ -644,60 +644,60 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
               {/* Card 1: Multi-Agent Workflow Engine */}
-              <div className="lg:col-span-2 cosmo-glass-card p-6 sm:p-8 rounded-3xl relative overflow-hidden border border-white/10 flex flex-col justify-between">
+              <div className="lg:col-span-2 cosmo-glass-card p-6 sm:p-8 relative overflow-hidden border border-slate-200 flex flex-col justify-between shadow-sm">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-blue-500/10 border border-blue-500/30 text-blue-400 mb-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-rose-500/10 border border-rose-500/30 text-rose-700 mb-4">
                     <Bot className="w-3.5 h-3.5" /> MULTI-AGENT WORKFLOW ORCHESTRATION
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2 font-display">Automated Hiring & Screening Pipeline</h3>
-                  <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-xl">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2 font-display">Automated Hiring & Screening Pipeline</h3>
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-xl">
                     Configure multi-agent rules to auto-screen candidates, schedule interview slots, sync notices to Telegram, and log placement records seamlessly.
                   </p>
                 </div>
 
                 <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
-                  <div className="bg-slate-900/80 p-4 rounded-2xl border border-white/10 hover:border-blue-500/40 transition-colors">
-                    <div className="text-blue-400 font-bold flex items-center justify-between">
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-colors shadow-sm">
+                    <div className="text-rose-600 font-bold flex items-center justify-between">
                       <span>Node #1</span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-rose-600" />
                     </div>
-                    <div className="text-white font-semibold mt-1">Resume Ingestion</div>
-                    <div className="text-[11px] text-slate-400 mt-1">Auto-extract tech skills & GPA metrics</div>
+                    <div className="text-slate-900 font-semibold mt-1">Resume Ingestion</div>
+                    <div className="text-[11px] text-slate-500 mt-1">Auto-extract tech skills & GPA metrics</div>
                   </div>
-                  <div className="bg-slate-900/80 p-4 rounded-2xl border border-white/10 hover:border-blue-500/40 transition-colors">
-                    <div className="text-blue-400 font-bold flex items-center justify-between">
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-colors shadow-sm">
+                    <div className="text-rose-600 font-bold flex items-center justify-between">
                       <span>Node #2</span>
-                      <Activity className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                      <Activity className="w-3.5 h-3.5 text-pink-600 animate-pulse" />
                     </div>
-                    <div className="text-white font-semibold mt-1">AI ATS Evaluator</div>
-                    <div className="text-[11px] text-slate-400 mt-1">Match candidate vs Job Description</div>
+                    <div className="text-slate-900 font-semibold mt-1">AI ATS Evaluator</div>
+                    <div className="text-[11px] text-slate-500 mt-1">Match candidate vs Job Description</div>
                   </div>
-                  <div className="bg-slate-900/80 p-4 rounded-2xl border border-white/10 hover:border-blue-500/40 transition-colors">
-                    <div className="text-blue-400 font-bold flex items-center justify-between">
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-colors shadow-sm">
+                    <div className="text-rose-600 font-bold flex items-center justify-between">
                       <span>Node #3</span>
-                      <Bot className="w-3.5 h-3.5 text-indigo-400" />
+                      <Bot className="w-3.5 h-3.5 text-rose-600" />
                     </div>
-                    <div className="text-white font-semibold mt-1">Auto Schedule</div>
-                    <div className="text-[11px] text-slate-400 mt-1">Dispatch interview links & notices</div>
+                    <div className="text-slate-900 font-semibold mt-1">Auto Schedule</div>
+                    <div className="text-[11px] text-slate-500 mt-1">Dispatch interview links & notices</div>
                   </div>
                 </div>
               </div>
 
               {/* Card 2: AI Flashcard Trainer Mini Widget */}
-              <div className="cosmo-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between">
+              <div className="cosmo-glass-card p-6 rounded-3xl border border-slate-200 flex flex-col justify-between shadow-sm">
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-mono font-bold uppercase text-amber-400 flex items-center gap-1.5">
+                    <span className="text-[10px] font-mono font-bold uppercase text-rose-600 flex items-center gap-1.5">
                       <Code2 className="w-3.5 h-3.5" /> AI INTERVIEW TRAINER
                     </span>
                     <span className="text-[10px] text-slate-500 font-mono">Card {activePrepQuestionIndex + 1}/{flashcards.length}</span>
                   </div>
-                  <h4 className="text-sm font-bold text-white leading-snug">
+                  <h4 className="text-sm font-bold text-slate-900 leading-snug">
                     {flashcards[activePrepQuestionIndex].q}
                   </h4>
                   
                   {showFlashcardAnswer && (
-                    <div className="mt-4 p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-xs text-blue-200 animate-in fade-in">
+                    <div className="mt-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-900 animate-in fade-in">
                       {flashcards[activePrepQuestionIndex].a}
                     </div>
                   )}
@@ -706,7 +706,7 @@ export default function App() {
                 <div className="mt-6 space-y-2">
                   <button
                     onClick={() => { setShowFlashcardAnswer(!showFlashcardAnswer); playAudioFeedback('click'); }}
-                    className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold transition-all"
+                    className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-all shadow-sm"
                   >
                     {showFlashcardAnswer ? 'Hide AI Solution' : 'Reveal AI Solution'}
                   </button>
@@ -716,7 +716,7 @@ export default function App() {
                       setShowFlashcardAnswer(false);
                       playAudioFeedback('pop');
                     }}
-                    className="w-full py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition-all flex items-center justify-center gap-1"
+                    className="w-full py-2 rounded-xl text-slate-500 hover:text-slate-900 text-xs font-medium transition-all flex items-center justify-center gap-1"
                   >
                     <span>Next Practice Question</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -730,26 +730,26 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2 font-display">
-                    <Bell className="w-4 h-4 text-blue-400" /> Recent Circulars & Placement Notices
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2 font-display">
+                    <Bell className="w-4 h-4 text-rose-600" /> Recent Circulars & Placement Notices
                   </h3>
                   <button 
                     onClick={() => { setActiveTab('notices'); playAudioFeedback('click'); }}
-                    className="text-xs font-semibold text-blue-400 hover:underline inline-flex items-center gap-1"
+                    className="text-xs font-semibold text-rose-600 hover:underline inline-flex items-center gap-1"
                   >
                     View All Notices <ArrowUpRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
                 {loading ? (
-                  <div className="p-8 cosmo-glass-card rounded-2xl text-center text-xs text-slate-400 flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-blue-400" /> Fetching circulars from Supabase...
+                  <div className="p-8 cosmo-glass-card rounded-2xl text-center text-xs text-slate-600 flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-rose-600" /> Fetching circulars from Supabase...
                   </div>
                 ) : notices.length === 0 ? (
-                  <div className="cosmo-glass-card p-8 rounded-2xl text-center space-y-3">
-                    <AlertCircle className="w-8 h-8 text-slate-500 mx-auto" />
-                    <div className="text-sm font-bold text-white">No announcements published yet</div>
-                    <p className="text-xs text-slate-400">
+                  <div className="cosmo-glass-card p-8 rounded-2xl text-center space-y-3 shadow-sm">
+                    <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
+                    <div className="text-sm font-bold text-slate-900">No announcements published yet</div>
+                    <p className="text-xs text-slate-600">
                       {canPostNotices ? 'Use the button above to post the first broadcast notice.' : 'Check back later for placement notices.'}
                     </p>
                   </div>
@@ -758,33 +758,33 @@ export default function App() {
                     {notices.slice(0, 3).map((notice) => (
                       <div 
                         key={notice.id}
-                        className="cosmo-glass-card p-5 rounded-2xl border border-white/10 hover:border-blue-500/40 transition-all group"
+                        className="cosmo-glass-card p-5 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-all group shadow-sm"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="space-y-1.5 flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 border border-blue-500/20 text-blue-300">
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/10 border border-rose-500/20 text-rose-700">
                                 {notice.category}
                               </span>
-                              <span className="text-xs text-slate-400">
+                              <span className="text-xs text-slate-500">
                                 {notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Just now'}
                               </span>
                             </div>
-                            <h4 className="text-base font-bold text-white leading-snug group-hover:text-blue-300">
+                            <h4 className="text-base font-bold text-slate-900 leading-snug group-hover:text-rose-600">
                               {notice.title}
                             </h4>
-                            <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                               {notice.content}
                             </p>
                           </div>
 
                           <button
                             onClick={() => toggleBookmark(notice.id)}
-                            className="p-2.5 rounded-full border border-white/10 bg-white/5 hover:border-blue-500/40 text-slate-300 transition-colors"
+                            className="p-2.5 rounded-full border border-slate-200 bg-slate-50 hover:border-rose-500/40 text-slate-700 transition-colors shadow-sm"
                             title="Save Circular"
                           >
                             {bookmarkedNotices.includes(notice.id) ? (
-                              <BookmarkCheck className="w-4 h-4 text-blue-400" />
+                              <BookmarkCheck className="w-4 h-4 text-rose-600" />
                             ) : (
                               <Bookmark className="w-4 h-4 text-slate-400" />
                             )}
@@ -798,31 +798,31 @@ export default function App() {
 
               {/* COSMOQ Automation Config */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2 font-display">
-                  <Sliders className="w-4 h-4 text-amber-400" /> COSMOQ Automation Rules
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2 font-display">
+                  <Sliders className="w-4 h-4 text-rose-600" /> COSMOQ Automation Rules
                 </h3>
                 
                 <div className="space-y-3">
                   {agentRules.map((rule) => (
                     <div 
                       key={rule.id}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                      className={`p-4 rounded-2xl border transition-all cursor-pointer shadow-sm ${
                         rule.active 
-                          ? 'bg-blue-500/10 border-blue-500/30' 
-                          : 'bg-white/5 border-white/5 opacity-70'
+                          ? 'bg-rose-500/10 border-rose-500/30' 
+                          : 'bg-slate-50 border-slate-200 opacity-70'
                       }`}
                       onClick={() => toggleAgentRule(rule.id)}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="text-xs font-bold text-white flex items-center gap-2">
-                          <Zap className={`w-3.5 h-3.5 ${rule.active ? 'text-blue-400' : 'text-slate-500'}`} />
+                        <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                          <Zap className={`w-3.5 h-3.5 ${rule.active ? 'text-rose-600' : 'text-slate-400'}`} />
                           {rule.title}
                         </div>
-                        <div className={`w-8 h-4 rounded-full transition-colors relative ${rule.active ? 'bg-blue-600' : 'bg-slate-700'}`}>
+                        <div className={`w-8 h-4 rounded-full transition-colors relative ${rule.active ? 'bg-rose-600' : 'bg-slate-300'}`}>
                           <div className={`w-3 h-3 rounded-full bg-white absolute top-0.5 transition-transform ${rule.active ? 'right-0.5' : 'left-0.5'}`} />
                         </div>
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-1.5 leading-normal">{rule.desc}</p>
+                      <p className="text-[11px] text-slate-600 mt-1.5 leading-normal">{rule.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -932,14 +932,14 @@ export default function App() {
         />
 
         {/* CTA BANNER */}
-        <section className="mt-20 cosmo-glass-card rounded-3xl p-10 text-center relative overflow-hidden border border-blue-500/30">
-          <div className="absolute inset-0 glow-radial-blue opacity-40 pointer-events-none" />
+        <section className="mt-20 cosmo-glass-card rounded-3xl p-10 text-center relative overflow-hidden border border-rose-500/30 bg-white shadow-xl">
+          <div className="absolute inset-0 glow-radial-crimson opacity-40 pointer-events-none" />
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl font-extrabold text-white font-display">Ready to Automate Your Campus Placement Engine?</h2>
-            <p className="text-xs text-slate-300">Launch autonomous recruitment workflows, AI resume scoring, and live drive orchestration today.</p>
+            <h2 className="text-3xl font-extrabold text-slate-900 font-display">Ready to Automate Your Campus Placement Engine?</h2>
+            <p className="text-xs text-slate-600">Launch autonomous recruitment workflows, AI resume scoring, and live drive orchestration today.</p>
             <button
               onClick={() => { setIsCommandOpen(true); playAudioFeedback('click'); }}
-              className="px-8 py-3.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(37,99,235,0.5)] transition-all transform hover:scale-105 inline-flex items-center gap-2"
+              className="px-8 py-3.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(225,29,72,0.3)] transition-all transform hover:scale-105 inline-flex items-center gap-2"
             >
               <Command className="w-4 h-4" />
               <span>Launch Command Hub (⌘K)</span>
