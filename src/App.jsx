@@ -67,6 +67,8 @@ import PricingSection from './components/PricingSection';
 import FaqSection from './components/FaqSection';
 import Modals from './components/Modals';
 import Footer from './components/Footer';
+import ThemeDrawer from './components/ThemeDrawer';
+
 
 // Audio feedback helper
 const playAudioFeedback = (type = 'click') => {
@@ -194,7 +196,40 @@ export default function App() {
   const [selectedResourceCategory, setSelectedResourceCategory] = useState('All');
   const [billingCycle, setBillingCycle] = useState('annual');
 
+  // Theme & Flexibility State (persisted in localStorage)
+  const [themePalette, setThemePalette] = useState(() => localStorage.getItem('cosmo_theme_palette') || 'crimson');
+  const [themeMode, setThemeMode] = useState(() => localStorage.getItem('cosmo_theme_mode') || 'light');
+  const [layoutDensity, setLayoutDensity] = useState(() => localStorage.getItem('cosmo_layout_density') || 'normal');
+  const [bgPattern, setBgPattern] = useState(() => localStorage.getItem('cosmo_bg_pattern') || 'grid');
+  const [isThemeDrawerOpen, setIsThemeDrawerOpen] = useState(false);
+  const [widgetVisibility, setWidgetVisibility] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cosmo_widget_visibility');
+      return saved ? JSON.parse(saved) : { hero: true, stats: true, drives: true, resume: true, notices: true, tasks: true, placements: true };
+    } catch (e) {
+      return { hero: true, stats: true, drives: true, resume: true, notices: true, tasks: true, placements: true };
+    }
+  });
+
+  // Sync Theme Attributes with HTML Root Element
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', themePalette);
+    root.setAttribute('data-mode', themeMode);
+    if (themeMode === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('cosmo_theme_palette', themePalette);
+    localStorage.setItem('cosmo_theme_mode', themeMode);
+    localStorage.setItem('cosmo_layout_density', layoutDensity);
+    localStorage.setItem('cosmo_bg_pattern', bgPattern);
+    localStorage.setItem('cosmo_widget_visibility', JSON.stringify(widgetVisibility));
+  }, [themePalette, themeMode, layoutDensity, bgPattern, widgetVisibility]);
+
   // Supabase Persistent State
+
   const [notices, setNotices] = useState([]);
   const [resources, setResources] = useState([]);
   const [tasks, setTasks] = useState([]);
@@ -513,20 +548,18 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans antialiased selection:bg-rose-600 selection:text-white relative overflow-x-hidden bg-line-grid">
+    <div className={`min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)] font-sans antialiased selection:bg-rose-600 selection:text-white relative overflow-x-hidden bg-pattern-${bgPattern} density-${layoutDensity} transition-colors duration-300`}>
       
       {/* Confetti Celebration Canvas Layer */}
       <ConfettiCanvas active={triggerConfetti} onComplete={() => setTriggerConfetti(false)} />
 
       {/* Floating Ambient Glowing Spheres */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] glow-radial-crimson pointer-events-none opacity-60 z-0" />
-      <div className="absolute top-[600px] right-0 w-[550px] h-[550px] glow-radial-rose pointer-events-none opacity-40 z-0" />
-      <div className="absolute top-[1600px] left-0 w-[600px] h-[600px] glow-radial-ruby pointer-events-none opacity-30 z-0" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-b from-rose-500/10 to-transparent pointer-events-none opacity-60 z-0" />
 
       {/* Toast Feedback Banner */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-white text-slate-900 px-5 py-3 rounded-2xl shadow-xl border border-rose-500/30 flex items-center gap-3 text-xs font-semibold tracking-wide animate-in fade-in slide-in-from-bottom-4">
-          <Sparkles className="w-4 h-4 text-rose-600 animate-spin" />
+        <div className="fixed bottom-6 right-6 z-50 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-5 py-3 rounded-2xl shadow-xl border border-rose-500/30 flex items-center gap-3 text-xs font-semibold tracking-wide animate-in fade-in slide-in-from-bottom-4">
+          <Sparkles className="w-4 h-4 text-rose-600 dark:text-rose-400 animate-spin" />
           {toastMessage}
         </div>
       )}
@@ -546,18 +579,25 @@ export default function App() {
         toggleBookmark={toggleBookmark}
         currentRole={currentRole}
         setCurrentRole={setCurrentRole}
+        themePalette={themePalette}
+        themeMode={themeMode}
+        setThemeMode={setThemeMode}
+        setIsThemeDrawerOpen={setIsThemeDrawerOpen}
       />
 
-      {/* Hero Section */}
-      <HeroSection
-        setActiveTab={setActiveTab}
-        playAudioFeedback={playAudioFeedback}
-        setIsVideoModalOpen={setIsVideoModalOpen}
-        noticesLength={notices.length}
-      />
+      {/* Hero Section (Widget Visibility Controlled) */}
+      {widgetVisibility.hero && (
+        <HeroSection
+          setActiveTab={setActiveTab}
+          playAudioFeedback={playAudioFeedback}
+          setIsVideoModalOpen={setIsVideoModalOpen}
+          noticesLength={notices.length}
+        />
+      )}
 
       {/* Hiring Partner Logo Marquee */}
       <PartnerMarquee />
+
 
       {/* Navigation Tabs Bar */}
       <section className="max-w-7xl mx-auto px-6 pt-10 pb-4">
@@ -832,14 +872,16 @@ export default function App() {
         )}
 
         {/* HIRING DRIVES TAB */}
-        {activeTab === 'drives' && (
+        {activeTab === 'drives' && widgetVisibility.drives && (
           <HiringDrivesTab
             featuredDrives={featuredDrives}
             currentDept={currentDept}
             fireCelebration={fireCelebration}
             showToast={showToast}
+            playAudioFeedback={playAudioFeedback}
           />
         )}
+
 
         {/* RESUME ATS MATCHER TAB */}
         {activeTab === 'resume_ai' && (
@@ -980,8 +1022,30 @@ export default function App() {
         handleCreatePlacement={handleCreatePlacement}
       />
 
+      {/* Theme & Layout Flexibility Engine Drawer */}
+      <ThemeDrawer
+        isOpen={isThemeDrawerOpen}
+        onClose={() => setIsThemeDrawerOpen(false)}
+        themePalette={themePalette}
+        setThemePalette={setThemePalette}
+        themeMode={themeMode}
+        setThemeMode={setThemeMode}
+        layoutDensity={layoutDensity}
+        setLayoutDensity={setLayoutDensity}
+        bgPattern={bgPattern}
+        setBgPattern={setBgPattern}
+        widgetVisibility={widgetVisibility}
+        setWidgetVisibility={setWidgetVisibility}
+        playAudioFeedback={playAudioFeedback}
+        showToast={showToast}
+        notices={notices}
+        placements={placements}
+        tasks={tasks}
+      />
+
       {/* Footer */}
       <Footer />
+
 
     </div>
   );
