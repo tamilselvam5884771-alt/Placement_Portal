@@ -13,10 +13,13 @@ export default function NoticesTab({
   const [search, setSearch] = useState('');
   const [selectedCat, setSelectedCat] = useState('All');
 
-  const categories = ['All', 'General', 'Interview Schedule', 'Results', 'Urgent'];
+  const categories = ['All', 'General', 'Interview Schedule', 'Results', 'Urgent', 'Bookmarked'];
 
   const filteredNotices = notices.filter(n => {
-    const matchesCat = selectedCat === 'All' || n.category === selectedCat;
+    const matchesCat = 
+      selectedCat === 'All' ? true :
+      selectedCat === 'Bookmarked' ? bookmarkedNotices.includes(n.id) :
+      n.category === selectedCat;
     const matchesSearch = n.title.toLowerCase().includes(search.toLowerCase()) || n.content.toLowerCase().includes(search.toLowerCase());
     return matchesCat && matchesSearch;
   });
@@ -34,7 +37,7 @@ export default function NoticesTab({
         {canPostNotices && (
           <button
             onClick={() => { setIsNoticeModalOpen(true); playAudioFeedback('click'); }}
-            className="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 self-start sm:self-auto"
+            className="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 self-start sm:self-auto transform hover:scale-105"
           >
             <Plus className="w-4 h-4" /> Post New Circular
           </button>
@@ -55,7 +58,7 @@ export default function NoticesTab({
                   : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
               }`}
             >
-              {cat}
+              {cat === 'Bookmarked' ? `Bookmarked (${bookmarkedNotices.length})` : cat}
             </button>
           ))}
         </div>
