@@ -1044,7 +1044,7 @@ export default function App() {
       />
 
       {/* Footer */}
-      <Footer />
+      <Footer showToast={showToast} playAudioFeedback={playAudioFeedback} />
 
 
     </div>
