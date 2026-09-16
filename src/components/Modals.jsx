@@ -34,16 +34,16 @@ export default function Modals({
     <>
       {/* Command Palette Modal Overlay (⌘K) */}
       {isCommandOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-start justify-center pt-24 p-4">
-          <div className="cosmo-glass-card max-w-xl w-full rounded-3xl p-4 border border-rose-500/40 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 bg-white">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                <Command className="w-4 h-4 text-rose-600" />
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-start justify-center pt-24 p-4">
+          <div className="cosmo-glass-card max-w-xl w-full rounded-3xl p-4 border border-rose-500/40 shadow-2xl space-y-4 animate-fade-in-scale bg-white dark:bg-slate-900">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+                <Command className="w-4 h-4 text-rose-600 dark:text-rose-400" />
                 <span>COSMOQ AI Command Hub</span>
               </div>
               <button 
                 onClick={() => setIsCommandOpen(false)}
-                className="p-1 rounded-full text-slate-400 hover:text-slate-900"
+                className="p-1 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -57,7 +57,7 @@ export default function Modals({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search circulars, job drives, materials, or candidate records..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:border-rose-500 placeholder:text-slate-400"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs focus:outline-none focus:border-rose-500 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
