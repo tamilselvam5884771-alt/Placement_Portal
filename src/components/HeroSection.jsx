@@ -119,8 +119,54 @@ export default function HeroSection({
           </div>
         </div>
 
+        {/* Quick Hub Navigation Bar */}
+        <div className="mt-8 pt-6 border-t border-slate-200/80 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <button 
+            onClick={() => { setActiveTab('resume-matcher'); playAudioFeedback('click'); }}
+            className="p-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 hover:border-rose-500/40 text-left transition-all hover:-translate-y-0.5 group"
+          >
+            <div className="text-[11px] font-bold text-slate-900 dark:text-white flex items-center justify-between">
+              ATS Resume Matcher
+              <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Scan & score against Job Descriptions</div>
+          </button>
+          
+          <button 
+            onClick={() => { setActiveTab('drives'); playAudioFeedback('click'); }}
+            className="p-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 hover:border-rose-500/40 text-left transition-all hover:-translate-y-0.5 group"
+          >
+            <div className="text-[11px] font-bold text-slate-900 dark:text-white flex items-center justify-between">
+              Active Hiring Drives
+              <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Explore 28+ top recruiter drives</div>
+          </button>
+
+          <button 
+            onClick={() => { setActiveTab('prep'); playAudioFeedback('click'); }}
+            className="p-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 hover:border-rose-500/40 text-left transition-all hover:-translate-y-0.5 group"
+          >
+            <div className="text-[11px] font-bold text-slate-900 dark:text-white flex items-center justify-between">
+              Prep Lab & Mock AI
+              <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">DSA, System Design & Aptitude practice</div>
+          </button>
+
+          <button 
+            onClick={() => { setActiveTab('placements'); playAudioFeedback('click'); }}
+            className="p-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 hover:border-rose-500/40 text-left transition-all hover:-translate-y-0.5 group"
+          >
+            <div className="text-[11px] font-bold text-slate-900 dark:text-white flex items-center justify-between">
+              Placement Stats
+              <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">View real-time department analytics</div>
+          </button>
+        </div>
+
       </div>
     </section>
   );
 }
-
