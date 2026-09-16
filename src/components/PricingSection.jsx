@@ -37,72 +37,72 @@ export default function PricingSection({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {/* Student Tier */}
-        <div className="cosmo-glass-card p-8 rounded-3xl border border-slate-200 flex flex-col justify-between shadow-sm">
+        <div className="cosmo-glass-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm transform hover:-translate-y-1 transition-all">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Candidate Access</span>
-            <h3 className="text-xl font-bold text-slate-900 mt-1">Student Portal</h3>
-            <div className="mt-4 text-3xl font-extrabold text-slate-900 font-display">
-              $0 <span className="text-xs text-slate-500 font-normal">/ forever</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Candidate Access</span>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">Student Portal</h3>
+            <div className="mt-4 text-3xl font-extrabold text-slate-900 dark:text-white font-display">
+              $0 <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">/ forever</span>
             </div>
-            <ul className="mt-6 space-y-3 text-xs text-slate-700">
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Unlimited AI Resume ATS scoring</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Technical Flashcard Prep Engine</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> One-click hiring drive application</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Real-time notice notifications</li>
+            <ul className="mt-6 space-y-3 text-xs text-slate-700 dark:text-slate-300">
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Unlimited AI Resume ATS scoring</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Technical Flashcard Prep Engine</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> One-click hiring drive application</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Real-time notice notifications</li>
             </ul>
           </div>
           <button 
             onClick={() => { setActiveTab('drives'); playAudioFeedback('click'); }}
-            className="mt-8 py-3 w-full rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-all shadow-sm"
+            className="mt-8 py-3 w-full rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all shadow-sm"
           >
             Access Free Desk
           </button>
         </div>
 
         {/* Recruiter / Pro Tier */}
-        <div className="cosmo-glass-card p-8 rounded-3xl border border-rose-500/40 shadow-lg flex flex-col justify-between relative overflow-hidden">
+        <div className="cosmo-glass-card p-8 rounded-3xl border border-rose-500/40 shadow-lg flex flex-col justify-between relative overflow-hidden transform hover:-translate-y-1 transition-all">
           <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold bg-rose-600 text-white uppercase tracking-wider">
             RECOMMENDED
           </div>
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-rose-700">Placement Cell</span>
-            <h3 className="text-xl font-bold text-slate-900 mt-1">Pro Agent Suite</h3>
-            <div className="mt-4 text-3xl font-extrabold text-slate-900 font-display">
-              {billingCycle === 'annual' ? '$149' : '$179'} <span className="text-xs text-slate-500 font-normal">/ month</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">Placement Cell</span>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">Pro Agent Suite</h3>
+            <div className="mt-4 text-3xl font-extrabold text-slate-900 dark:text-white font-display">
+              {billingCycle === 'annual' ? '$149' : '$179'} <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">/ month</span>
             </div>
-            <ul className="mt-6 space-y-3 text-xs text-slate-700">
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> All Student Tier capabilities</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Autonomous Multi-Agent Workflows</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Supabase Realtime Database Sync</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Automated Drive & Notice Broadcaster</li>
+            <ul className="mt-6 space-y-3 text-xs text-slate-700 dark:text-slate-300">
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> All Student Tier capabilities</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Autonomous Multi-Agent Workflows</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Supabase Realtime Database Sync</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Automated Drive & Notice Broadcaster</li>
             </ul>
           </div>
           <button 
             onClick={() => { fireCelebration(); showToast('Pro Agent Suite trial activated!'); }}
-            className="mt-8 py-3 w-full rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-all shadow-md"
+            className="mt-8 py-3 w-full rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-all shadow-md transform hover:scale-[1.02]"
           >
             Launch Pro Suite
           </button>
         </div>
 
         {/* Enterprise Tier */}
-        <div className="cosmo-glass-card p-8 rounded-3xl border border-slate-200 flex flex-col justify-between shadow-sm">
+        <div className="cosmo-glass-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm transform hover:-translate-y-1 transition-all">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-rose-700">University Scale</span>
-            <h3 className="text-xl font-bold text-slate-900 mt-1">Enterprise AI</h3>
-            <div className="mt-4 text-3xl font-extrabold text-slate-900 font-display">
-              Custom <span className="text-xs text-slate-500 font-normal">/ campus</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">University Scale</span>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">Enterprise AI</h3>
+            <div className="mt-4 text-3xl font-extrabold text-slate-900 dark:text-white font-display">
+              Custom <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">/ campus</span>
             </div>
-            <ul className="mt-6 space-y-3 text-xs text-slate-700">
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Unlimited Candidate Profiles</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Custom LLM Model Integration</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Dedicated Account Manager & SLA</li>
-              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600" /> Advanced Placement Analytics</li>
+            <ul className="mt-6 space-y-3 text-xs text-slate-700 dark:text-slate-300">
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Unlimited Candidate Profiles</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Custom LLM Model Integration</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Dedicated Account Manager & SLA</li>
+              <li className="flex items-center gap-2"><Check className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Advanced Placement Analytics</li>
             </ul>
           </div>
           <button 
             onClick={() => showToast('Enterprise inquiry logged. Placement team will contact you.')}
-            className="mt-8 py-3 w-full rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-all shadow-sm"
+            className="mt-8 py-3 w-full rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all shadow-sm"
           >
             Contact Enterprise Team
           </button>
