@@ -350,7 +350,7 @@ export default function ThemeDrawer({
           </button>
           <button
             onClick={() => { onClose(); playAudioFeedback('click'); }}
-            className="px-6 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md"
+            className="px-6 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md transform hover:scale-105"
           >
             Done
           </button>
