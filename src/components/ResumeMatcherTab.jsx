@@ -1,5 +1,5 @@
 import React from 'react';
-import { Brain, Loader2, Sparkles } from 'lucide-react';
+import { Brain, Loader2, Sparkles, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 export default function ResumeMatcherTab({
   targetRole,
@@ -11,6 +11,24 @@ export default function ResumeMatcherTab({
   isAnalyzingResume,
   aiMatchResult
 }) {
+  const samples = [
+    {
+      label: 'Fullstack Sample',
+      role: 'Fullstack Engineer',
+      text: 'Senior Fullstack Developer with 3+ years experience in React, Node.js, TypeScript, PostgreSQL, REST APIs, GraphQL, Docker, and AWS EC2. Built microservices and automated CI/CD pipelines.'
+    },
+    {
+      label: 'AI / ML Sample',
+      role: 'AI / ML Systems Engineer',
+      text: 'AI Systems Researcher specializing in PyTorch, Python, Hugging Face Transformers, CUDA optimization, Large Language Model Fine-tuning, Vector Databases (FAISS), and MLflow.'
+    },
+    {
+      label: 'Cloud Architect Sample',
+      role: 'Cloud Solutions Architect',
+      text: 'Cloud Solutions Engineer proficient in AWS CloudFormation, Kubernetes, Terraform, Docker, Go, Python, Azure DevOps, Linux Administration, and Distributed Microservices Architecture.'
+    }
+  ];
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-2">
@@ -48,15 +66,23 @@ export default function ResumeMatcherTab({
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
             <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300">Paste Resume Text / Skill Summary</label>
-            <button
-              type="button"
-              onClick={() => setResumeText("Experienced Fullstack Engineer proficient in React, Node.js, TypeScript, PostgreSQL, REST APIs, GraphQL, and Docker. Implemented real-time features using WebSockets and CI/CD automation pipelines.")}
-              className="text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:underline"
-            >
-              + Fill Sample Resume
-            </button>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {samples.map((s, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setTargetRole(s.role);
+                    setResumeText(s.text);
+                  }}
+                  className="px-2.5 py-1 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-[10px] font-bold border border-rose-500/20 transition-all"
+                >
+                  + {s.label}
+                </button>
+              ))}
+            </div>
           </div>
           <textarea
             rows={5}
@@ -70,7 +96,7 @@ export default function ResumeMatcherTab({
         <button
           onClick={handleAnalyzeResume}
           disabled={isAnalyzingResume}
-          className="w-full py-4 rounded-full bg-gradient-to-r from-rose-600 via-rose-700 to-rose-500 text-white font-bold text-xs uppercase tracking-wider hover:from-rose-500 hover:to-rose-600 transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 transform hover:scale-[1.01]"
+          className="w-full py-4 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 transform hover:scale-[1.01]"
         >
           {isAnalyzingResume ? (
             <>
@@ -93,9 +119,24 @@ export default function ResumeMatcherTab({
                 <h4 className="text-lg font-bold text-slate-900 dark:text-white">AI Assessment Results</h4>
               </div>
               <div className="text-right">
-                <span className="text-3xl font-extrabold text-rose-600 dark:text-rose-400 font-display">{aiMatchResult.score}%</span>
+                <span className={`text-3xl font-extrabold font-display ${
+                  aiMatchResult.score >= 88 ? 'text-emerald-600 dark:text-emerald-400' :
+                  aiMatchResult.score >= 75 ? 'text-rose-600 dark:text-rose-400' :
+                  'text-amber-600 dark:text-amber-400'
+                }`}>
+                  {aiMatchResult.score}%
+                </span>
                 <div className="text-[10px] text-rose-600 dark:text-rose-400 font-bold uppercase">ATS Compatibility</div>
               </div>
+            </div>
+
+            <div className="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+              <div
+                className={`h-full transition-all duration-500 rounded-full ${
+                  aiMatchResult.score >= 88 ? 'bg-emerald-500' : 'bg-rose-600'
+                }`}
+                style={{ width: `${aiMatchResult.score}%` }}
+              />
             </div>
 
             <p className="text-xs text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-100 dark:border-slate-700/60 leading-relaxed">
@@ -103,19 +144,23 @@ export default function ResumeMatcherTab({
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-800 dark:text-rose-300">
-                <div className="font-bold text-[10px] uppercase mb-1">✔ Matching Tech Keywords</div>
+              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 dark:text-emerald-300">
+                <div className="font-bold text-[10px] uppercase mb-1.5 flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Matching Tech Keywords
+                </div>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {aiMatchResult.matchingSkills.map((s, idx) => (
-                    <span key={idx} className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-900 dark:text-rose-200 text-[10px] font-mono">{s}</span>
+                    <span key={idx} className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-900 dark:text-emerald-200 text-[10px] font-mono">{s}</span>
                   ))}
                 </div>
               </div>
-              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
-                <div className="font-bold text-[10px] uppercase mb-1">⚡ Recommended Gaps to Add</div>
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300">
+                <div className="font-bold text-[10px] uppercase mb-1.5 flex items-center gap-1">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500" /> Recommended Gaps to Add
+                </div>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {aiMatchResult.missingKeywords.map((s, idx) => (
-                    <span key={idx} className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-[10px] font-mono">{s}</span>
+                    <span key={idx} className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-900 dark:text-amber-200 text-[10px] font-mono">{s}</span>
                   ))}
                 </div>
               </div>
