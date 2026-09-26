@@ -230,11 +230,33 @@ export default function App() {
 
   // Supabase Persistent State
 
-  const [notices, setNotices] = useState([]);
-  const [resources, setResources] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [placements, setPlacements] = useState([]);
+  const [notices, setNotices] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cosmo_cached_notices');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) { return []; }
+  });
+  const [resources, setResources] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cosmo_cached_resources');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) { return []; }
+  });
+  const [tasks, setTasks] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cosmo_cached_tasks');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) { return []; }
+  });
+  const [placements, setPlacements] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cosmo_cached_placements');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) { return []; }
+  });
   const [loading, setLoading] = useState(true);
+  const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Interactive Features State
   const [isCommandOpen, setIsCommandOpen] = useState(false);
@@ -302,42 +324,133 @@ export default function App() {
     { id: 'drive-4', company: 'Goldman Sachs', role: 'Quantitative Developer', package: '₹30.0 LPA', dept: 'All Depts', location: 'Mumbai', deadline: 'Sep 10, 2026', matchScore: 85, applicants: 215, tags: ['Java', 'Algorithms', 'Financial Math'] }
   ];
 
+  // Default Fallback Datasets for robust offline/empty DB handling
+  const defaultNotices = [
+    { id: 'notice-1', title: 'Google Campus Drive 2026 Registration Open', category: 'Interview Schedule', content: 'Registration for Google Software Engineer - AI Systems drive closes on August 30. Eligible: CSE & IT 2026 Batch with CGPA >= 7.5.', created_at: new Date(Date.now() - 3600000).toISOString(), attachment_url: '#' },
+    { id: 'notice-2', title: 'Amazon SDE-1 Online Assessment Slot Allotment', category: 'Urgent', content: 'All registered candidates must check their student inbox for online assessment login credentials. Test Window: 10:00 AM - 12:00 PM.', created_at: new Date(Date.now() - 86400000).toISOString() },
+    { id: 'notice-3', title: '1-on-1 Mock Technical Interview Series', category: 'General', content: 'Training & Placement Cell is conducting mock technical interview practice sessions for CSE, ECE, and IT students this weekend.', created_at: new Date(Date.now() - 172800000).toISOString() }
+  ];
+
+  const defaultTasks = [
+    { id: 'task-1', title: 'Audit CSE 2026 Batch ATS Resumes', department: 'CSE', description: 'Verify student uploaded resume URLs for formatting & contact information.', status: 'in_progress', deadline: 'Aug 28, 2026' },
+    { id: 'task-2', title: 'Coordinate Microsoft Interview Labs', department: 'ECE', description: 'Setup 15 high-performance desktop rigs with Teams & Visual Studio Code.', status: 'todo', deadline: 'Sep 01, 2026' },
+    { id: 'task-3', title: 'Publish Placement Hall of Fame Banner', department: 'IT', description: 'Collect quotes and offer letters from 24 newly placed candidates.', status: 'done', deadline: 'Aug 24, 2026' }
+  ];
+
+  const defaultResources = [
+    { id: 'res-1', title: 'System Design & Distributed Systems Handbook 2026', category: 'System Design', month: 'August 2026', file_url: '#' },
+    { id: 'res-2', title: 'Top 100 Data Structures & Algorithms Problem Patterns', category: 'Technical', month: 'August 2026', file_url: '#' },
+    { id: 'res-3', title: 'Quantitative Aptitude & Logical Reasoning Master Sheet', category: 'Aptitude', month: 'July 2026', file_url: '#' },
+    { id: 'res-4', title: 'Behavioral & STAR Method Interview Guide', category: 'HR', month: 'July 2026', file_url: '#' }
+  ];
+
+  const defaultPlacements = [
+    { id: 'plc-1', student_name: 'Aditya Sharma', company: 'Google', role: 'Software Engineer - AI Systems', package: '₹32.5 LPA', department: 'CSE', quote: 'The AI interview trainer and ATS score matcher on the portal helped me target missing tech keywords before my final interview!' },
+    { id: 'plc-2', student_name: 'Priya Nair', company: 'Microsoft', role: 'Cloud Solutions Architect', package: '₹28.0 LPA', department: 'ECE', quote: 'Having department task trackers and live circular notifications kept our whole batch organized throughout recruitment.' },
+    { id: 'plc-3', student_name: 'Rahul Verma', company: 'Goldman Sachs', role: 'Quantitative Developer', package: '₹30.0 LPA', department: 'IT', quote: 'Preparation resources and mock questions gave me high confidence during algorithmic rounds.' }
+  ];
+
   // Fetch real data from Supabase backend
-  const fetchAllData = async () => {
-    setLoading(true);
+  const fetchAllData = async (isManualRefresh = false) => {
+    if (isManualRefresh) setIsSyncing(true);
+    else if (!notices.length && !tasks.length) setLoading(true);
     try {
-      const { data: noticesData, error: noticesErr } = await supabase
-        .from('notices')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (!noticesErr && noticesData) setNotices(noticesData);
+      const [noticesRes, tasksRes, resourcesRes, placementsRes] = await Promise.allSettled([
+        supabase.from('notices').select('*').order('created_at', { ascending: false }),
+        supabase.from('tasks').select('*').order('created_at', { ascending: false }),
+        supabase.from('resources').select('*').order('created_at', { ascending: false }),
+        supabase.from('placements').select('*').order('created_at', { ascending: false })
+      ]);
 
-      const { data: tasksData, error: tasksErr } = await supabase
-        .from('tasks')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (!tasksErr && tasksData) setTasks(tasksData);
+      if (noticesRes.status === 'fulfilled' && noticesRes.value.data && noticesRes.value.data.length > 0) {
+        setNotices(noticesRes.value.data);
+        localStorage.setItem('cosmo_cached_notices', JSON.stringify(noticesRes.value.data));
+      } else if (!notices.length) {
+        setNotices(defaultNotices);
+      }
 
-      const { data: resourcesData, error: resourcesErr } = await supabase
-        .from('resources')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (!resourcesErr && resourcesData) setResources(resourcesData);
+      if (tasksRes.status === 'fulfilled' && tasksRes.value.data && tasksRes.value.data.length > 0) {
+        setTasks(tasksRes.value.data);
+        localStorage.setItem('cosmo_cached_tasks', JSON.stringify(tasksRes.value.data));
+      } else if (!tasks.length) {
+        setTasks(defaultTasks);
+      }
 
-      const { data: placementsData, error: placementsErr } = await supabase
-        .from('placements')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (!placementsErr && placementsData) setPlacements(placementsData);
+      if (resourcesRes.status === 'fulfilled' && resourcesRes.value.data && resourcesRes.value.data.length > 0) {
+        setResources(resourcesRes.value.data);
+        localStorage.setItem('cosmo_cached_resources', JSON.stringify(resourcesRes.value.data));
+      } else if (!resources.length) {
+        setResources(defaultResources);
+      }
+
+      if (placementsRes.status === 'fulfilled' && placementsRes.value.data && placementsRes.value.data.length > 0) {
+        setPlacements(placementsRes.value.data);
+        localStorage.setItem('cosmo_cached_placements', JSON.stringify(placementsRes.value.data));
+      } else if (!placements.length) {
+        setPlacements(defaultPlacements);
+      }
+
+      setLastSyncTime(new Date());
     } catch (err) {
-      console.error('Error fetching data from Supabase:', err);
+      console.error('Error in parallel data retrieval:', err);
     } finally {
       setLoading(false);
+      setIsSyncing(false);
     }
   };
+  // Global Cross-Table Search Retrieval Index
+  const globalSearchIndex = React.useMemo(() => {
+    const items = [];
+    featuredDrives.forEach(d => items.push({ id: d.id, title: `${d.company} - ${d.role}`, subtitle: `${d.package} • ${d.location}`, type: 'Hiring Drive', category: 'Drive', targetTab: 'drives', data: d }));
+    notices.forEach(n => items.push({ id: n.id, title: n.title, subtitle: n.content, type: 'Notice / Circular', category: n.category || 'Notice', targetTab: 'notices', data: n }));
+    resources.forEach(r => items.push({ id: r.id, title: r.title, subtitle: `Material Category: ${r.category || 'General'}`, type: 'Study Resource', category: r.category || 'Resource', targetTab: 'resources', data: r }));
+    tasks.forEach(t => items.push({ id: t.id, title: t.title, subtitle: `Dept: ${t.department} • Status: ${t.status}`, type: 'Department Task', category: 'Task', targetTab: 'tasks', data: t }));
+    placements.forEach(p => items.push({ id: p.id, title: `${p.student_name} placed at ${p.company}`, subtitle: `${p.role} (${p.package})`, type: 'Placement Record', category: 'Placement', targetTab: 'placements', data: p }));
+    return items;
+  }, [featuredDrives, notices, resources, tasks, placements]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     fetchAllData();
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notices' }, () => fetchAllData(true))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => fetchAllData(true))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'resources' }, () => fetchAllData(true))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'placements' }, () => fetchAllData(true))
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   // Hotkey listener for Command Palette (⌘K or Ctrl+K)
@@ -583,6 +696,9 @@ export default function App() {
         themeMode={themeMode}
         setThemeMode={setThemeMode}
         setIsThemeDrawerOpen={setIsThemeDrawerOpen}
+        lastSyncTime={lastSyncTime}
+        isSyncing={isSyncing}
+        onRefreshData={fetchAllData}
       />
 
       {/* Hero Section (Widget Visibility Controlled) */}
@@ -1020,6 +1136,7 @@ export default function App() {
         newPlacement={newPlacement}
         setNewPlacement={setNewPlacement}
         handleCreatePlacement={handleCreatePlacement}
+        globalSearchIndex={globalSearchIndex}
       />
 
       {/* Theme & Layout Flexibility Engine Drawer */}
