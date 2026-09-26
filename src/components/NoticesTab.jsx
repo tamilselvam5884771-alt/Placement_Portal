@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Loader2, AlertCircle, FileText, BookmarkCheck, Bookmark, Search, Download } from 'lucide-react';
+import { Plus, AlertCircle, FileText, BookmarkCheck, Bookmark, Search, Sparkles } from 'lucide-react';
 
 export default function NoticesTab({
   notices,
@@ -24,13 +24,31 @@ export default function NoticesTab({
     return matchesCat && matchesSearch;
   });
 
+  const getCategoryBadgeClass = (category) => {
+    switch (category) {
+      case 'Urgent':
+        return 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400';
+      case 'Interview Schedule':
+        return 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400';
+      case 'Results':
+        return 'bg-indigo-500/10 border-indigo-500/30 text-indigo-600 dark:text-indigo-400';
+      default:
+        return 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400';
+    }
+  };
+
   return (
     <div className="space-y-6">
       
       {/* Header & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-display">Placement Notices & Circulars</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-display">Placement Notices & Circulars</h3>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400">
+              {filteredNotices.length} Items
+            </span>
+          </div>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Official broadcast updates from Training & Placement Cell.</p>
         </div>
         
@@ -54,11 +72,11 @@ export default function NoticesTab({
               onClick={() => { setSelectedCat(cat); playAudioFeedback?.('click'); }}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCat === cat
-                  ? 'bg-rose-600 text-white shadow-sm'
+                  ? 'bg-rose-600 text-white shadow-sm scale-105'
                   : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
               }`}
             >
-              {cat === 'Bookmarked' ? `Bookmarked (${bookmarkedNotices.length})` : cat}
+              {cat === 'Bookmarked' ? `Saved List (${bookmarkedNotices.length})` : cat}
             </button>
           ))}
         </div>
@@ -77,8 +95,14 @@ export default function NoticesTab({
       </div>
 
       {loading ? (
-        <div className="p-12 cosmo-glass-card rounded-3xl text-center text-xs text-slate-600 dark:text-slate-400 flex items-center justify-center gap-2">
-          <Loader2 className="w-5 h-5 animate-spin text-rose-600 dark:text-rose-400" /> Loading notices...
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="cosmo-glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 animate-shimmer space-y-4">
+              <div className="h-4 bg-slate-300 dark:bg-slate-700 rounded w-1/4" />
+              <div className="h-6 bg-slate-300 dark:bg-slate-700 rounded w-3/4" />
+              <div className="h-12 bg-slate-200 dark:bg-slate-800 rounded w-full" />
+            </div>
+          ))}
         </div>
       ) : filteredNotices.length === 0 ? (
         <div className="cosmo-glass-card p-12 rounded-3xl text-center space-y-3 shadow-sm border border-slate-200 dark:border-slate-800">
@@ -89,17 +113,17 @@ export default function NoticesTab({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredNotices.map((notice) => (
-            <div key={notice.id} className="cosmo-glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-rose-500/40 dark:hover:border-rose-500/40 transition-all flex flex-col justify-between shadow-sm">
+            <div key={notice.id} className="cosmo-glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-rose-500/40 dark:hover:border-rose-500/40 transition-all flex flex-col justify-between shadow-sm group">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400">
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getCategoryBadgeClass(notice.category)}`}>
                     {notice.category}
                   </span>
                   <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                     {notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Recent'}
                   </span>
                 </div>
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white leading-snug">{notice.title}</h4>
+                <h4 className="text-lg font-bold text-slate-900 dark:text-white leading-snug group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">{notice.title}</h4>
                 <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed whitespace-pre-line">{notice.content}</p>
               </div>
 
@@ -114,12 +138,15 @@ export default function NoticesTab({
                     <FileText className="w-3.5 h-3.5" /> Attachment Link
                   </a>
                 ) : (
-                  <span className="text-slate-500 dark:text-slate-400 text-[11px]">COSMOQ Verified Notice</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-[11px] flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-rose-500" /> COSMOQ Verified Circular
+                  </span>
                 )}
 
                 <button
                   onClick={() => toggleBookmark(notice.id)}
                   className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-rose-600 transition-colors"
+                  title="Save to Reading List"
                 >
                   {bookmarkedNotices.includes(notice.id) ? (
                     <BookmarkCheck className="w-4 h-4 text-rose-600 dark:text-rose-400" />
@@ -135,4 +162,3 @@ export default function NoticesTab({
     </div>
   );
 }
-
