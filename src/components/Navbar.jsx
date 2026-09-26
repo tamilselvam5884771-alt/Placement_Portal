@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Search, Bell, Shield, Zap, Palette, Sun, Moon } from 'lucide-react';
+import { Cpu, Search, Bell, Shield, Zap, Palette, Sun, Moon, RefreshCw, CheckCircle2 } from 'lucide-react';
 
 export default function Navbar({
   setActiveTab,
@@ -18,7 +18,10 @@ export default function Navbar({
   themePalette,
   themeMode,
   setThemeMode,
-  setIsThemeDrawerOpen
+  setIsThemeDrawerOpen,
+  lastSyncTime,
+  isSyncing,
+  onRefreshData
 }) {
   return (
     <header className="sticky top-0 z-40 cosmo-glass border-b border-slate-200/80 dark:border-slate-800 shadow-sm transition-colors">
@@ -38,14 +41,25 @@ export default function Navbar({
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" /> AGENTS ACTIVE
               </span>
             </div>
-            <span className="text-[10px] font-medium tracking-wider text-slate-500 dark:text-slate-400 block">
-              Placement & Autonomous Hiring Engine
+            <span className="text-[10px] font-medium tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <span>Placement & Autonomous Hiring Engine</span>
             </span>
           </div>
         </div>
 
         {/* Quick Controls */}
         <div className="flex items-center gap-2.5">
+          
+          {/* Live Data Sync Status Indicator */}
+          <button
+            onClick={() => { onRefreshData?.(true); playAudioFeedback('click'); }}
+            disabled={isSyncing}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:border-rose-500/40 transition-all shadow-xs"
+            title="Click to force fetch fresh updates from Supabase"
+          >
+            <RefreshCw className={`w-3 h-3 text-rose-600 dark:text-rose-400 ${isSyncing ? 'animate-spin' : ''}`} />
+            <span>{isSyncing ? 'Syncing...' : 'Live Sync'}</span>
+          </button>
           
           {/* Command Palette Trigger */}
           <button
