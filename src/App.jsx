@@ -53,9 +53,9 @@ import {
 import supabase from './lib/supabaseClient';
 
 // Import Modular Components
-import Navbar from './components/Navbar';
-import HeroSection from './components/HeroSection';
-import PartnerMarquee from './components/PartnerMarquee';
+import LeftSidebar from './components/LeftSidebar';
+import TopHeader from './components/TopHeader';
+import LandingPage from './components/LandingPage';
 import HiringDrivesTab from './components/HiringDrivesTab';
 import ResumeMatcherTab from './components/ResumeMatcherTab';
 import PrepTab from './components/PrepTab';
@@ -68,7 +68,6 @@ import FaqSection from './components/FaqSection';
 import Modals from './components/Modals';
 import Footer from './components/Footer';
 import ThemeDrawer from './components/ThemeDrawer';
-
 
 // Audio feedback helper
 const playAudioFeedback = (type = 'click') => {
@@ -190,11 +189,13 @@ export default function App() {
   // Roles: 'student' | 'club_student' | 'coordinator' | 'hod'
   const [currentRole, setCurrentRole] = useState('student');
   const [currentDept, setCurrentDept] = useState('CSE');
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' = Animated Landing Page
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedResourceCategory, setSelectedResourceCategory] = useState('All');
   const [billingCycle, setBillingCycle] = useState('annual');
+
+  // Sidebar Layout State
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Theme & Flexibility State (persisted in localStorage)
   const [themePalette, setThemePalette] = useState(() => localStorage.getItem('cosmo_theme_palette') || 'crimson');
@@ -229,7 +230,6 @@ export default function App() {
   }, [themePalette, themeMode, layoutDensity, bgPattern, widgetVisibility]);
 
   // Supabase Persistent State
-
   const [notices, setNotices] = useState(() => {
     try {
       const saved = localStorage.getItem('cosmo_cached_notices');
@@ -264,7 +264,6 @@ export default function App() {
   const [bookmarkedNotices, setBookmarkedNotices] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
   const [triggerConfetti, setTriggerConfetti] = useState(false);
-  const [selectedPlacement, setSelectedPlacement] = useState(null);
   const [activePrepQuestionIndex, setActivePrepQuestionIndex] = useState(0);
   const [showFlashcardAnswer, setShowFlashcardAnswer] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
@@ -316,7 +315,7 @@ export default function App() {
     }
   ];
 
-  // Hiring Drives Mockup Data for COSMOQ Desk
+  // Hiring Drives Data
   const featuredDrives = [
     { id: 'drive-1', company: 'Google', role: 'Software Engineer - AI Systems', package: '₹32.5 LPA', dept: 'CSE / IT', location: 'Bengaluru / Hybrid', deadline: 'Aug 30, 2026', matchScore: 96, applicants: 142, tags: ['Python', 'PyTorch', 'Distributed Systems'] },
     { id: 'drive-2', company: 'Microsoft', role: 'Cloud Solutions Architect', package: '₹28.0 LPA', dept: 'CSE / ECE / IT', location: 'Hyderabad', deadline: 'Sep 02, 2026', matchScore: 92, applicants: 189, tags: ['Azure', 'Kubernetes', 'Go'] },
@@ -324,7 +323,7 @@ export default function App() {
     { id: 'drive-4', company: 'Goldman Sachs', role: 'Quantitative Developer', package: '₹30.0 LPA', dept: 'All Depts', location: 'Mumbai', deadline: 'Sep 10, 2026', matchScore: 85, applicants: 215, tags: ['Java', 'Algorithms', 'Financial Math'] }
   ];
 
-  // Default Fallback Datasets for robust offline/empty DB handling
+  // Default Datasets
   const defaultNotices = [
     { id: 'notice-1', title: 'Google Campus Drive 2026 Registration Open', category: 'Interview Schedule', content: 'Registration for Google Software Engineer - AI Systems drive closes on August 30. Eligible: CSE & IT 2026 Batch with CGPA >= 7.5.', created_at: new Date(Date.now() - 3600000).toISOString(), attachment_url: '#' },
     { id: 'notice-2', title: 'Amazon SDE-1 Online Assessment Slot Allotment', category: 'Urgent', content: 'All registered candidates must check their student inbox for online assessment login credentials. Test Window: 10:00 AM - 12:00 PM.', created_at: new Date(Date.now() - 86400000).toISOString() },
@@ -398,6 +397,7 @@ export default function App() {
       setIsSyncing(false);
     }
   };
+
   // Global Cross-Table Search Retrieval Index
   const globalSearchIndex = React.useMemo(() => {
     const items = [];
@@ -408,35 +408,6 @@ export default function App() {
     placements.forEach(p => items.push({ id: p.id, title: `${p.student_name} placed at ${p.company}`, subtitle: `${p.role} (${p.package})`, type: 'Placement Record', category: 'Placement', targetTab: 'placements', data: p }));
     return items;
   }, [featuredDrives, notices, resources, tasks, placements]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
     fetchAllData();
@@ -661,451 +632,249 @@ export default function App() {
   });
 
   return (
-    <div className={`min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)] font-sans antialiased selection:bg-rose-600 selection:text-white relative overflow-x-hidden bg-pattern-${bgPattern} density-${layoutDensity} transition-colors duration-300`}>
+    <div className={`min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)] font-sans antialiased selection:bg-rose-600 selection:text-white relative bg-pattern-${bgPattern} density-${layoutDensity} transition-colors duration-300 flex`}>
       
       {/* Confetti Celebration Canvas Layer */}
       <ConfettiCanvas active={triggerConfetti} onComplete={() => setTriggerConfetti(false)} />
 
-      {/* Floating Ambient Glowing Spheres */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-b from-rose-500/10 to-transparent pointer-events-none opacity-60 z-0" />
+      {/* Floating Ambient Glowing Background Spheres */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-b from-rose-500/10 to-transparent pointer-events-none opacity-60 z-0" />
 
       {/* Toast Feedback Banner */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-5 py-3 rounded-2xl shadow-xl border border-rose-500/30 flex items-center gap-3 text-xs font-semibold tracking-wide animate-in fade-in slide-in-from-bottom-4">
+        <div className="fixed bottom-6 right-6 z-50 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-5 py-3 rounded-2xl shadow-2xl border border-rose-500/30 flex items-center gap-3 text-xs font-semibold tracking-wide animate-in fade-in slide-in-from-bottom-4">
           <Sparkles className="w-4 h-4 text-rose-600 dark:text-rose-400 animate-spin" />
           {toastMessage}
         </div>
       )}
 
-      {/* Navbar */}
-      <Navbar
+      {/* Dedicated Left Sidebar Navigation */}
+      <LeftSidebar
+        activeTab={activeTab}
         setActiveTab={setActiveTab}
         playAudioFeedback={playAudioFeedback}
-        setIsCommandOpen={setIsCommandOpen}
-        currentDept={currentDept}
-        setCurrentDept={setCurrentDept}
-        showToast={showToast}
-        setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
-        isNotificationDrawerOpen={isNotificationDrawerOpen}
-        notices={notices}
-        bookmarkedNotices={bookmarkedNotices}
-        toggleBookmark={toggleBookmark}
+        noticesCount={notices.length}
+        drivesCount={featuredDrives.length}
+        tasksCount={filteredTasks.length}
         currentRole={currentRole}
         setCurrentRole={setCurrentRole}
-        themePalette={themePalette}
-        themeMode={themeMode}
-        setThemeMode={setThemeMode}
-        setIsThemeDrawerOpen={setIsThemeDrawerOpen}
-        lastSyncTime={lastSyncTime}
-        isSyncing={isSyncing}
-        onRefreshData={fetchAllData}
+        showToast={showToast}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
       />
 
-      {/* Hero Section (Widget Visibility Controlled) */}
-      {widgetVisibility.hero && (
-        <HeroSection
-          setActiveTab={setActiveTab}
-          playAudioFeedback={playAudioFeedback}
-          setIsVideoModalOpen={setIsVideoModalOpen}
-          noticesLength={notices.length}
-        />
-      )}
-
-      {/* Hiring Partner Logo Marquee */}
-      <PartnerMarquee />
-
-
-      {/* Navigation Tabs Bar */}
-      <section className="max-w-7xl mx-auto px-6 pt-10 pb-4">
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 border-b border-slate-200">
-          {[
-            { id: 'overview', label: 'Overview & AI Desk', icon: Cpu },
-            { id: 'drives', label: 'Hiring Drives Desk', icon: Briefcase },
-            { id: 'resume_ai', label: 'Resume ATS Matcher', icon: Brain },
-            { id: 'prep_ai', label: 'AI Flashcard Prep', icon: Code2 },
-            { id: 'notices', label: 'Notices & Circulars', icon: Bell },
-            { id: 'resources', label: 'Study Repository', icon: BookOpen },
-            { id: 'tasks', label: 'Department Tasks', icon: Layers },
-            { id: 'placements', label: 'Wall of Fame', icon: Trophy }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => { setActiveTab(tab.id); playAudioFeedback('click'); }}
-                className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 whitespace-nowrap flex items-center gap-2 ${
-                  activeTab === tab.id
-                    ? 'bg-rose-600 text-white shadow-[0_0_20px_rgba(225,29,72,0.3)] scale-105'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 shadow-sm'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Dynamic Admin Control Bar */}
-        {(canPostNotices || canManageAll) && (
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl cosmo-glass-card border border-rose-500/20 bg-white shadow-sm">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-700">
-              <Shield className="w-4 h-4 text-rose-600" /> Admin Controls Active ({currentRole.replace('_', ' ')})
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              {canPostNotices && (
-                <button 
-                  onClick={() => { setIsNoticeModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold tracking-wide transition-all transform hover:scale-105 inline-flex items-center gap-1.5 shadow-md"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Post Circular
-                </button>
-              )}
-              {canUpdateDepartmentTasks && (
-                <button 
-                  onClick={() => { setIsTaskModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-800 text-xs font-bold tracking-wide hover:bg-slate-50 transition-all inline-flex items-center gap-1.5 shadow-sm"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Assign Task
-                </button>
-              )}
-              {canManageAll && (
-                <button 
-                  onClick={() => { setIsResourceModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-800 text-xs font-bold tracking-wide hover:bg-slate-50 transition-all inline-flex items-center gap-1.5 shadow-sm"
-                >
-                  <Upload className="w-3.5 h-3.5" /> Upload Material
-                </button>
-              )}
-              {canManageAll && (
-                <button 
-                  onClick={() => { setIsPlacementModalOpen(true); playAudioFeedback('click'); }}
-                  className="px-4 py-2 rounded-full border border-rose-500/30 bg-rose-500/10 text-rose-700 text-xs font-bold tracking-wide hover:bg-rose-500/20 transition-all inline-flex items-center gap-1.5 shadow-sm"
-                >
-                  <Trophy className="w-3.5 h-3.5 text-rose-600" /> Publish Placed Candidate
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-      </section>
-
-      {/* Main Tab View Contents */}
-      <main className="max-w-7xl mx-auto px-6 pb-20 pt-6">
+      {/* Main App Container */}
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
         
-        {/* OVERVIEW TAB */}
-        {activeTab === 'overview' && (
-          <div className="space-y-12">
-            {/* Bento Grid Feature Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
-              {/* Card 1: Multi-Agent Workflow Engine */}
-              <div className="lg:col-span-2 cosmo-glass-card p-6 sm:p-8 relative overflow-hidden border border-slate-200 flex flex-col justify-between shadow-sm">
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-rose-500/10 border border-rose-500/30 text-rose-700 mb-4">
-                    <Bot className="w-3.5 h-3.5" /> MULTI-AGENT WORKFLOW ORCHESTRATION
-                  </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2 font-display">Automated Hiring & Screening Pipeline</h3>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-xl">
-                    Configure multi-agent rules to auto-screen candidates, schedule interview slots, sync notices to Telegram, and log placement records seamlessly.
-                  </p>
-                </div>
+        {/* Top Header Control Bar */}
+        <TopHeader
+          activeTab={activeTab}
+          setIsSidebarOpen={setIsSidebarOpen}
+          setIsCommandOpen={setIsCommandOpen}
+          playAudioFeedback={playAudioFeedback}
+          isSyncing={isSyncing}
+          onRefreshData={fetchAllData}
+          currentDept={currentDept}
+          setCurrentDept={setCurrentDept}
+          showToast={showToast}
+          setIsThemeDrawerOpen={setIsThemeDrawerOpen}
+          themeMode={themeMode}
+          setThemeMode={setThemeMode}
+          isNotificationDrawerOpen={isNotificationDrawerOpen}
+          setIsNotificationDrawerOpen={setIsNotificationDrawerOpen}
+          notices={notices}
+        />
 
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-colors shadow-sm">
-                    <div className="text-rose-600 font-bold flex items-center justify-between">
-                      <span>Node #1</span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-rose-600" />
-                    </div>
-                    <div className="text-slate-900 font-semibold mt-1">Resume Ingestion</div>
-                    <div className="text-[11px] text-slate-500 mt-1">Auto-extract tech skills & GPA metrics</div>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-colors shadow-sm">
-                    <div className="text-rose-600 font-bold flex items-center justify-between">
-                      <span>Node #2</span>
-                      <Activity className="w-3.5 h-3.5 text-pink-600 animate-pulse" />
-                    </div>
-                    <div className="text-slate-900 font-semibold mt-1">AI ATS Evaluator</div>
-                    <div className="text-[11px] text-slate-500 mt-1">Match candidate vs Job Description</div>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-colors shadow-sm">
-                    <div className="text-rose-600 font-bold flex items-center justify-between">
-                      <span>Node #3</span>
-                      <Bot className="w-3.5 h-3.5 text-rose-600" />
-                    </div>
-                    <div className="text-slate-900 font-semibold mt-1">Auto Schedule</div>
-                    <div className="text-[11px] text-slate-500 mt-1">Dispatch interview links & notices</div>
-                  </div>
-                </div>
+        {/* Dynamic Admin Action Bar on Feature Pages */}
+        {(canPostNotices || canManageAll) && activeTab !== 'overview' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 w-full">
+            <div className="p-3 rounded-2xl cosmo-glass-card border border-rose-500/20 bg-rose-500/5 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                <span className="text-xs font-bold text-slate-900 dark:text-white font-mono uppercase">
+                  {currentRole.toUpperCase()} MANAGEMENT DESK
+                </span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:inline">
+                  • Create updates for students
+                </span>
               </div>
-
-              {/* Card 2: AI Flashcard Trainer Mini Widget */}
-              <div className="cosmo-glass-card p-6 rounded-3xl border border-slate-200 flex flex-col justify-between shadow-sm">
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-mono font-bold uppercase text-rose-600 flex items-center gap-1.5">
-                      <Code2 className="w-3.5 h-3.5" /> AI INTERVIEW TRAINER
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-mono">Card {activePrepQuestionIndex + 1}/{flashcards.length}</span>
-                  </div>
-                  <h4 className="text-sm font-bold text-slate-900 leading-snug">
-                    {flashcards[activePrepQuestionIndex].q}
-                  </h4>
-                  
-                  {showFlashcardAnswer && (
-                    <div className="mt-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-900 animate-in fade-in">
-                      {flashcards[activePrepQuestionIndex].a}
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-6 space-y-2">
+              <div className="flex items-center gap-2">
+                {canPostNotices && (
                   <button
-                    onClick={() => { setShowFlashcardAnswer(!showFlashcardAnswer); playAudioFeedback('click'); }}
-                    className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-all shadow-sm"
+                    onClick={() => { setIsNoticeModalOpen(true); playAudioFeedback('click'); }}
+                    className="px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-transform hover:scale-105"
                   >
-                    {showFlashcardAnswer ? 'Hide AI Solution' : 'Reveal AI Solution'}
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Post Notice</span>
                   </button>
+                )}
+                {canUpdateDepartmentTasks && (
                   <button
-                    onClick={() => {
-                      setActivePrepQuestionIndex((prev) => (prev + 1) % flashcards.length);
-                      setShowFlashcardAnswer(false);
-                      playAudioFeedback('pop');
-                    }}
-                    className="w-full py-2 rounded-xl text-slate-500 hover:text-slate-900 text-xs font-medium transition-all flex items-center justify-center gap-1"
+                    onClick={() => { setIsTaskModalOpen(true); playAudioFeedback('click'); }}
+                    className="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs"
                   >
-                    <span>Next Practice Question</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add Task</span>
                   </button>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Live Announcements & Automation Config */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2 font-display">
-                    <Bell className="w-4 h-4 text-rose-600" /> Recent Circulars & Placement Notices
-                  </h3>
-                  <button 
-                    onClick={() => { setActiveTab('notices'); playAudioFeedback('click'); }}
-                    className="text-xs font-semibold text-rose-600 hover:underline inline-flex items-center gap-1"
+                )}
+                {canManageAll && (
+                  <button
+                    onClick={() => { setIsResourceModalOpen(true); playAudioFeedback('click'); }}
+                    className="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs"
                   >
-                    View All Notices <ArrowUpRight className="w-3.5 h-3.5" />
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload Resource</span>
                   </button>
-                </div>
-
-                {loading ? (
-                  <div className="p-8 cosmo-glass-card rounded-2xl text-center text-xs text-slate-600 flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-rose-600" /> Fetching circulars from Supabase...
-                  </div>
-                ) : notices.length === 0 ? (
-                  <div className="cosmo-glass-card p-8 rounded-2xl text-center space-y-3 shadow-sm">
-                    <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
-                    <div className="text-sm font-bold text-slate-900">No announcements published yet</div>
-                    <p className="text-xs text-slate-600">
-                      {canPostNotices ? 'Use the button above to post the first broadcast notice.' : 'Check back later for placement notices.'}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {notices.slice(0, 3).map((notice) => (
-                      <div 
-                        key={notice.id}
-                        className="cosmo-glass-card p-5 rounded-2xl border border-slate-200 hover:border-rose-500/40 transition-all group shadow-sm"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="space-y-1.5 flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/10 border border-rose-500/20 text-rose-700">
-                                {notice.category}
-                              </span>
-                              <span className="text-xs text-slate-500">
-                                {notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Just now'}
-                              </span>
-                            </div>
-                            <h4 className="text-base font-bold text-slate-900 leading-snug group-hover:text-rose-600">
-                              {notice.title}
-                            </h4>
-                            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                              {notice.content}
-                            </p>
-                          </div>
-
-                          <button
-                            onClick={() => toggleBookmark(notice.id)}
-                            className="p-2.5 rounded-full border border-slate-200 bg-slate-50 hover:border-rose-500/40 text-slate-700 transition-colors shadow-sm"
-                            title="Save Circular"
-                          >
-                            {bookmarkedNotices.includes(notice.id) ? (
-                              <BookmarkCheck className="w-4 h-4 text-rose-600" />
-                            ) : (
-                              <Bookmark className="w-4 h-4 text-slate-400" />
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 )}
               </div>
-
-              {/* COSMOQ Automation Config */}
-              <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2 font-display">
-                  <Sliders className="w-4 h-4 text-rose-600" /> COSMOQ Automation Rules
-                </h3>
-                
-                <div className="space-y-3">
-                  {agentRules.map((rule) => (
-                    <div 
-                      key={rule.id}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer shadow-sm ${
-                        rule.active 
-                          ? 'bg-rose-500/10 border-rose-500/30' 
-                          : 'bg-slate-50 border-slate-200 opacity-70'
-                      }`}
-                      onClick={() => toggleAgentRule(rule.id)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
-                          <Zap className={`w-3.5 h-3.5 ${rule.active ? 'text-rose-600' : 'text-slate-400'}`} />
-                          {rule.title}
-                        </div>
-                        <div className={`w-8 h-4 rounded-full transition-colors relative ${rule.active ? 'bg-rose-600' : 'bg-slate-300'}`}>
-                          <div className={`w-3 h-3 rounded-full bg-white absolute top-0.5 transition-transform ${rule.active ? 'right-0.5' : 'left-0.5'}`} />
-                        </div>
-                      </div>
-                      <p className="text-[11px] text-slate-600 mt-1.5 leading-normal">{rule.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         )}
 
-        {/* HIRING DRIVES TAB */}
-        {activeTab === 'drives' && widgetVisibility.drives && (
-          <HiringDrivesTab
-            featuredDrives={featuredDrives}
-            currentDept={currentDept}
-            fireCelebration={fireCelebration}
-            showToast={showToast}
-            playAudioFeedback={playAudioFeedback}
-          />
-        )}
+        {/* Main View Area: Render Dedicated Page Content Based on activeTab */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+          
+          {/* TAB 1: LANDING PAGE (DEDICATED ANIMATED LANDING PAGE) */}
+          {activeTab === 'overview' && (
+            <LandingPage
+              setActiveTab={setActiveTab}
+              playAudioFeedback={playAudioFeedback}
+              setIsVideoModalOpen={setIsVideoModalOpen}
+              setIsCommandOpen={setIsCommandOpen}
+              notices={notices}
+              loading={loading}
+              canPostNotices={canPostNotices}
+              bookmarkedNotices={bookmarkedNotices}
+              toggleBookmark={toggleBookmark}
+              agentRules={agentRules}
+              toggleAgentRule={toggleAgentRule}
+              flashcards={flashcards}
+              activePrepQuestionIndex={activePrepQuestionIndex}
+              setActivePrepQuestionIndex={setActivePrepQuestionIndex}
+              showFlashcardAnswer={showFlashcardAnswer}
+              setShowFlashcardAnswer={setShowFlashcardAnswer}
+              openFaqIndex={openFaqIndex}
+              setOpenFaqIndex={setOpenFaqIndex}
+              billingCycle={billingCycle}
+              setBillingCycle={setBillingCycle}
+              fireCelebration={fireCelebration}
+              showToast={showToast}
+              placements={placements}
+            />
+          )}
 
+          {/* TAB 2: HIRING DRIVES PAGE */}
+          {activeTab === 'drives' && (
+            <HiringDrivesTab
+              featuredDrives={featuredDrives}
+              currentDept={currentDept}
+              fireCelebration={fireCelebration}
+              showToast={showToast}
+              playAudioFeedback={playAudioFeedback}
+            />
+          )}
 
-        {/* RESUME ATS MATCHER TAB */}
-        {activeTab === 'resume_ai' && (
-          <ResumeMatcherTab
-            targetRole={targetRole}
-            setTargetRole={setTargetRole}
-            currentDept={currentDept}
-            resumeText={resumeText}
-            setResumeText={setResumeText}
-            handleAnalyzeResume={handleAnalyzeResume}
-            isAnalyzingResume={isAnalyzingResume}
-            aiMatchResult={aiMatchResult}
-          />
-        )}
+          {/* TAB 3: RESUME ATS MATCHER PAGE */}
+          {activeTab === 'resume_ai' && (
+            <ResumeMatcherTab
+              targetRole={targetRole}
+              setTargetRole={setTargetRole}
+              currentDept={currentDept}
+              resumeText={resumeText}
+              setResumeText={setResumeText}
+              handleAnalyzeResume={handleAnalyzeResume}
+              isAnalyzingResume={isAnalyzingResume}
+              aiMatchResult={aiMatchResult}
+            />
+          )}
 
-        {/* PREP TAB */}
-        {activeTab === 'prep_ai' && (
-          <PrepTab
-            flashcards={flashcards}
-            activePrepQuestionIndex={activePrepQuestionIndex}
-            setActivePrepQuestionIndex={setActivePrepQuestionIndex}
-            showFlashcardAnswer={showFlashcardAnswer}
-            setShowFlashcardAnswer={setShowFlashcardAnswer}
-            playAudioFeedback={playAudioFeedback}
-          />
-        )}
+          {/* TAB 4: INTERVIEW PREP HUB PAGE */}
+          {activeTab === 'prep_ai' && (
+            <PrepTab
+              flashcards={flashcards}
+              activePrepQuestionIndex={activePrepQuestionIndex}
+              setActivePrepQuestionIndex={setActivePrepQuestionIndex}
+              showFlashcardAnswer={showFlashcardAnswer}
+              setShowFlashcardAnswer={setShowFlashcardAnswer}
+              playAudioFeedback={playAudioFeedback}
+            />
+          )}
 
-        {/* NOTICES TAB */}
-        {activeTab === 'notices' && (
-          <NoticesTab
-            notices={notices}
-            loading={loading}
-            canPostNotices={canPostNotices}
-            setIsNoticeModalOpen={setIsNoticeModalOpen}
-            playAudioFeedback={playAudioFeedback}
-            toggleBookmark={toggleBookmark}
-            bookmarkedNotices={bookmarkedNotices}
-          />
-        )}
+          {/* TAB 5: NOTICES & CIRCULARS PAGE */}
+          {activeTab === 'notices' && (
+            <NoticesTab
+              notices={notices}
+              loading={loading}
+              canPostNotices={canPostNotices}
+              setIsNoticeModalOpen={setIsNoticeModalOpen}
+              playAudioFeedback={playAudioFeedback}
+              toggleBookmark={toggleBookmark}
+              bookmarkedNotices={bookmarkedNotices}
+            />
+          )}
 
-        {/* RESOURCES TAB */}
-        {activeTab === 'resources' && (
-          <ResourcesTab
-            resources={resources}
-            loading={loading}
-            canManageAll={canManageAll}
-            setIsResourceModalOpen={setIsResourceModalOpen}
-            playAudioFeedback={playAudioFeedback}
-          />
-        )}
+          {/* TAB 6: LEARNING RESOURCES PAGE */}
+          {activeTab === 'resources' && (
+            <ResourcesTab
+              resources={resources}
+              loading={loading}
+              canManageAll={canManageAll}
+              setIsResourceModalOpen={setIsResourceModalOpen}
+              playAudioFeedback={playAudioFeedback}
+            />
+          )}
 
-        {/* TASKS TAB */}
-        {activeTab === 'tasks' && (
-          <TasksTab
-            currentDept={currentDept}
-            canUpdateDepartmentTasks={canUpdateDepartmentTasks}
-            setIsTaskModalOpen={setIsTaskModalOpen}
-            playAudioFeedback={playAudioFeedback}
-            filteredTasks={filteredTasks}
-            handleTaskStatusChange={handleTaskStatusChange}
-          />
-        )}
+          {/* TAB 7: TASKS PAGE */}
+          {activeTab === 'tasks' && (
+            <TasksTab
+              currentDept={currentDept}
+              canUpdateDepartmentTasks={canUpdateDepartmentTasks}
+              setIsTaskModalOpen={setIsTaskModalOpen}
+              playAudioFeedback={playAudioFeedback}
+              filteredTasks={filteredTasks}
+              handleTaskStatusChange={handleTaskStatusChange}
+            />
+          )}
 
-        {/* PLACEMENTS TAB */}
-        {activeTab === 'placements' && (
-          <PlacementsTab
-            placements={placements}
-            loading={loading}
-            canManageAll={canManageAll}
-            setIsPlacementModalOpen={setIsPlacementModalOpen}
-            playAudioFeedback={playAudioFeedback}
-          />
-        )}
+          {/* TAB 8: PLACEMENT STATS & HALL OF FAME PAGE */}
+          {activeTab === 'placements' && (
+            <PlacementsTab
+              placements={placements}
+              loading={loading}
+              canManageAll={canManageAll}
+              setIsPlacementModalOpen={setIsPlacementModalOpen}
+              playAudioFeedback={playAudioFeedback}
+            />
+          )}
 
-        {/* PRICING SECTION */}
-        <PricingSection
-          billingCycle={billingCycle}
-          setBillingCycle={setBillingCycle}
-          playAudioFeedback={playAudioFeedback}
-          setActiveTab={setActiveTab}
-          fireCelebration={fireCelebration}
-          showToast={showToast}
-        />
+          {/* TAB 9: PRICING PAGE */}
+          {activeTab === 'pricing' && (
+            <PricingSection
+              billingCycle={billingCycle}
+              setBillingCycle={setBillingCycle}
+              playAudioFeedback={playAudioFeedback}
+              setActiveTab={setActiveTab}
+              fireCelebration={fireCelebration}
+              showToast={showToast}
+            />
+          )}
 
-        {/* FAQ SECTION */}
-        <FaqSection
-          openFaqIndex={openFaqIndex}
-          setOpenFaqIndex={setOpenFaqIndex}
-          playAudioFeedback={playAudioFeedback}
-        />
+          {/* TAB 10: FAQ PAGE */}
+          {activeTab === 'faq' && (
+            <FaqSection
+              openFaqIndex={openFaqIndex}
+              setOpenFaqIndex={setOpenFaqIndex}
+              playAudioFeedback={playAudioFeedback}
+            />
+          )}
 
-        {/* CTA BANNER */}
-        <section className="mt-20 cosmo-glass-card rounded-3xl p-10 text-center relative overflow-hidden border border-rose-500/30 bg-white shadow-xl">
-          <div className="absolute inset-0 glow-radial-crimson opacity-40 pointer-events-none" />
-          <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl font-extrabold text-slate-900 font-display">Ready to Automate Your Campus Placement Engine?</h2>
-            <p className="text-xs text-slate-600">Launch autonomous recruitment workflows, AI resume scoring, and live drive orchestration today.</p>
-            <button
-              onClick={() => { setIsCommandOpen(true); playAudioFeedback('click'); }}
-              className="px-8 py-3.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(225,29,72,0.3)] transition-all transform hover:scale-105 inline-flex items-center gap-2"
-            >
-              <Command className="w-4 h-4" />
-              <span>Launch Command Hub (⌘K)</span>
-            </button>
-          </div>
-        </section>
+        </main>
 
-      </main>
+        {/* Footer */}
+        <Footer showToast={showToast} playAudioFeedback={playAudioFeedback} />
+      </div>
 
       {/* Modals & Overlays */}
       <Modals
@@ -1159,10 +928,6 @@ export default function App() {
         placements={placements}
         tasks={tasks}
       />
-
-      {/* Footer */}
-      <Footer showToast={showToast} playAudioFeedback={playAudioFeedback} />
-
 
     </div>
   );
