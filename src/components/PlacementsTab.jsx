@@ -26,7 +26,7 @@ export default function PlacementsTab({
               {filteredPlacements.length} Candidates
             </span>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Celebrating placed candidates & top CTC offers achieved.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">Celebrating placed candidates & top CTC offers achieved.</p>
         </div>
         {canManageAll && (
           <button
@@ -41,17 +41,17 @@ export default function PlacementsTab({
       {/* Stats Summary Banner */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="cosmo-glass p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Offers Logged</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300">Total Offers Logged</div>
           <div className="text-3xl font-extrabold text-slate-900 dark:text-white mt-1 font-display">{placements.length} Candidates</div>
           <Sparkles className="w-6 h-6 text-rose-500/30 absolute right-4 bottom-4" />
         </div>
         <div className="cosmo-glass p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Highest Package Achieved</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300">Highest Package Achieved</div>
           <div className="text-3xl font-extrabold text-rose-600 dark:text-rose-400 mt-1 font-display">₹48.5 LPA</div>
           <Trophy className="w-6 h-6 text-rose-500/30 absolute right-4 bottom-4" />
         </div>
         <div className="cosmo-glass p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Avg Candidate Offer</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300">Avg Candidate Offer</div>
           <div className="text-3xl font-extrabold text-slate-900 dark:text-white mt-1 font-display">₹12.4 LPA</div>
           <Building2 className="w-6 h-6 text-rose-500/30 absolute right-4 bottom-4" />
         </div>
@@ -85,7 +85,7 @@ export default function PlacementsTab({
         <div className="cosmo-glass-card p-12 rounded-3xl text-center space-y-3 border border-rose-500/20 shadow-sm">
           <Trophy className="w-10 h-10 text-rose-600 dark:text-rose-400 mx-auto" />
           <div className="text-base font-bold text-slate-900 dark:text-white">No placement records found</div>
-          <p className="text-xs text-slate-600 dark:text-slate-400">Coordinators can publish placed candidate offers.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">Coordinators can publish placed candidate offers.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -96,7 +96,7 @@ export default function PlacementsTab({
                   <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 font-display">
                     {plc.package || 'Confidential CTC'}
                   </span>
-                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase">Dept: {plc.department || 'CSE'}</span>
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-300 uppercase">Dept: {plc.department || 'CSE'}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -112,14 +112,14 @@ export default function PlacementsTab({
                 {plc.quote && (
                   <div className="mt-4 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 relative">
                     <Quote className="w-3.5 h-3.5 text-rose-500/40 mb-1" />
-                    <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed">
+                    <p className="text-xs text-slate-700 dark:text-slate-200 italic leading-relaxed">
                       "{plc.quote}"
                     </p>
                   </div>
                 )}
               </div>
 
-              <div className="mt-6 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+              <div className="mt-6 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-300">
                 <span className="flex items-center gap-1 font-semibold text-rose-600 dark:text-rose-400">
                   <Sparkles className="w-3 h-3" /> Verified Candidate Offer
                 </span>
