@@ -156,46 +156,46 @@ export default function Modals({
 
       {/* Post Notice Modal */}
       {isNoticeModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white shadow-2xl">
-            <button onClick={() => setIsNoticeModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-900">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white dark:bg-slate-900 shadow-2xl">
+            <button onClick={() => setIsNoticeModalOpen(false)} className="p-1 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white absolute top-4 right-4 transition-colors">
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Post Broadcast Circular Notice</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Post Broadcast Circular Notice</h3>
             <form onSubmit={handleCreateNotice} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Notice Title</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Notice Title</label>
                 <input
                   type="text"
                   required
                   value={newNotice.title}
                   onChange={(e) => setNewNotice({ ...newNotice, title: e.target.value })}
                   placeholder="e.g. Google Hiring Drive Registration Deadline"
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                 />
               </div>
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Category</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Category</label>
                 <select
                   value={newNotice.category}
                   onChange={(e) => setNewNotice({ ...newNotice, category: e.target.value })}
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500 cursor-pointer"
                 >
-                  <option value="General">General Announcement</option>
-                  <option value="Drive">Hiring Drive</option>
-                  <option value="Urgent">Urgent Alert</option>
-                  <option value="Exam">Exam / Assessment</option>
+                  <option value="General" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">General Announcement</option>
+                  <option value="Drive" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Hiring Drive</option>
+                  <option value="Urgent" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Urgent Alert</option>
+                  <option value="Exam" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Exam / Assessment</option>
                 </select>
               </div>
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Notice Description</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Notice Description</label>
                 <textarea
                   rows={4}
                   required
                   value={newNotice.content}
                   onChange={(e) => setNewNotice({ ...newNotice, content: e.target.value })}
                   placeholder="Enter notice details..."
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                 />
               </div>
               <button
@@ -211,47 +211,47 @@ export default function Modals({
 
       {/* Create Task Modal */}
       {isTaskModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white shadow-2xl">
-            <button onClick={() => setIsTaskModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-900">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white dark:bg-slate-900 shadow-2xl">
+            <button onClick={() => setIsTaskModalOpen(false)} className="p-1 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white absolute top-4 right-4 transition-colors">
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Assign Department Operation Task</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Assign Department Operation Task</h3>
             <form onSubmit={handleCreateTask} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Task Title</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Task Title</label>
                 <input
                   type="text"
                   required
                   value={newTask.title}
                   onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                   placeholder="e.g. Verify CSE 2026 Batch Student Resumes"
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                 />
               </div>
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Department</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Department</label>
                 <select
                   value={newTask.department}
                   onChange={(e) => setNewTask({ ...newTask, department: e.target.value })}
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500 cursor-pointer"
                 >
-                  <option value="CSE">CSE</option>
-                  <option value="ECE">ECE</option>
-                  <option value="MECH">Mechanical</option>
-                  <option value="CIVIL">Civil</option>
-                  <option value="IT">IT</option>
-                  <option value="EEE">EEE</option>
+                  <option value="CSE" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">CSE</option>
+                  <option value="ECE" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">ECE</option>
+                  <option value="MECH" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Mechanical</option>
+                  <option value="CIVIL" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Civil</option>
+                  <option value="IT" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">IT</option>
+                  <option value="EEE" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">EEE</option>
                 </select>
               </div>
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Description</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Description</label>
                 <textarea
                   rows={3}
                   value={newTask.description}
                   onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                   placeholder="Task instructions..."
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                 />
               </div>
               <button
@@ -267,35 +267,35 @@ export default function Modals({
 
       {/* Upload Resource Modal */}
       {isResourceModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white shadow-2xl">
-            <button onClick={() => setIsResourceModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-900">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white dark:bg-slate-900 shadow-2xl">
+            <button onClick={() => setIsResourceModalOpen(false)} className="p-1 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white absolute top-4 right-4 transition-colors">
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Upload Study Repository Material</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Upload Study Repository Material</h3>
             <form onSubmit={handleCreateResource} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Material Title</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Material Title</label>
                 <input
                   type="text"
                   required
                   value={newResource.title}
                   onChange={(e) => setNewResource({ ...newResource, title: e.target.value })}
                   placeholder="e.g. Data Structures & Algorithms Master Sheet"
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                 />
               </div>
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Category</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Category</label>
                 <select
                   value={newResource.category}
                   onChange={(e) => setNewResource({ ...newResource, category: e.target.value })}
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500 cursor-pointer"
                 >
-                  <option value="Technical">Technical Notes</option>
-                  <option value="Aptitude">Aptitude & Reasoning</option>
-                  <option value="System Design">System Design</option>
-                  <option value="HR">HR Interview Guide</option>
+                  <option value="Technical" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Technical Notes</option>
+                  <option value="Aptitude" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Aptitude & Reasoning</option>
+                  <option value="System Design" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">System Design</option>
+                  <option value="HR" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">HR Interview Guide</option>
                 </select>
               </div>
               <button
@@ -311,57 +311,57 @@ export default function Modals({
 
       {/* Publish Placement Record Modal */}
       {isPlacementModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white shadow-2xl">
-            <button onClick={() => setIsPlacementModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-900">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="cosmo-glass-card max-w-lg w-full p-6 rounded-3xl border border-rose-500/40 relative bg-white dark:bg-slate-900 shadow-2xl">
+            <button onClick={() => setIsPlacementModalOpen(false)} className="p-1 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white absolute top-4 right-4 transition-colors">
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Publish Placed Candidate (Wall of Fame)</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Publish Placed Candidate (Wall of Fame)</h3>
             <form onSubmit={handleCreatePlacement} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Student Name</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Student Name</label>
                 <input
                   type="text"
                   required
                   value={newPlacement.student_name}
                   onChange={(e) => setNewPlacement({ ...newPlacement, student_name: e.target.value })}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Company</label>
+                  <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Company</label>
                   <input
                     type="text"
                     required
                     value={newPlacement.company}
                     onChange={(e) => setNewPlacement({ ...newPlacement, company: e.target.value })}
                     placeholder="e.g. Google"
-                    className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                    className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">CTC Package</label>
+                  <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">CTC Package</label>
                   <input
                     type="text"
                     required
                     value={newPlacement.package}
                     onChange={(e) => setNewPlacement({ ...newPlacement, package: e.target.value })}
                     placeholder="e.g. ₹28.5 LPA"
-                    className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                    className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Role Title</label>
+                <label className="block text-slate-700 dark:text-slate-200 font-semibold mb-1">Role Title</label>
                 <input
                   type="text"
                   required
                   value={newPlacement.role}
                   onChange={(e) => setNewPlacement({ ...newPlacement, role: e.target.value })}
                   placeholder="e.g. Software Engineer - AI Systems"
-                  className="w-full p-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-rose-500"
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-rose-500"
                 />
               </div>
               <button
