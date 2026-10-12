@@ -32,7 +32,7 @@ export default function FaqSection({ openFaqIndex, setOpenFaqIndex, playAudioFee
     <section className="mt-20 max-w-3xl mx-auto space-y-6">
       <div className="text-center space-y-2">
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-display">Frequently Asked Questions</h3>
-        <p className="text-xs text-slate-600 dark:text-slate-400">Everything you need to know about COSMOQ AI Placement Engine.</p>
+        <p className="text-xs text-slate-600 dark:text-slate-300">Everything you need to know about COSMOQ AI Placement Engine.</p>
       </div>
 
       <div className="cosmo-glass p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
@@ -47,7 +47,7 @@ export default function FaqSection({ openFaqIndex, setOpenFaqIndex, playAudioFee
 
       <div className="space-y-3">
         {filteredFaqs.length === 0 ? (
-          <div className="text-center py-8 text-xs text-slate-500 dark:text-slate-400 font-mono">
+          <div className="text-center py-8 text-xs text-slate-500 dark:text-slate-300 font-mono">
             No FAQs match your search query.
           </div>
         ) : (
@@ -64,7 +64,7 @@ export default function FaqSection({ openFaqIndex, setOpenFaqIndex, playAudioFee
                 {openFaqIndex === idx ? <ChevronUp className="w-4 h-4 text-rose-600 dark:text-rose-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
               </button>
               {openFaqIndex === idx && (
-                <div className="px-5 pb-5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-3 animate-fade-in-scale">
+                <div className="px-5 pb-5 text-xs text-slate-600 dark:text-slate-200 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-3 animate-fade-in-scale">
                   {faq.a}
                 </div>
               )}
