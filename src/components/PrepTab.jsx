@@ -12,7 +12,7 @@ export default function PrepTab({
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white font-display">Technical Interview Practice Engine</h2>
-        <p className="text-xs text-slate-600 dark:text-slate-400">Master core concepts asked in top tech company placement rounds.</p>
+        <p className="text-xs text-slate-600 dark:text-slate-300">Master core concepts asked in top tech company placement rounds.</p>
       </div>
 
       {/* Progress Bar */}
@@ -43,7 +43,7 @@ export default function PrepTab({
             {flashcards[activePrepQuestionIndex]?.a}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+          <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-300">
             Click below to reveal full AI explanation & code example
           </div>
         )}
@@ -55,7 +55,7 @@ export default function PrepTab({
               setShowFlashcardAnswer(false);
               playAudioFeedback('pop');
             }}
-            className="px-4 py-2.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 text-xs font-semibold transition-all shadow-sm"
+            className="px-4 py-2.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-50 text-xs font-semibold transition-all shadow-sm"
           >
             ← Previous
           </button>
