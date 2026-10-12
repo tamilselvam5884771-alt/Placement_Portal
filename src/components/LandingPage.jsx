@@ -231,7 +231,7 @@ export default function LandingPage({
               <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
               <span className="w-3 h-3 rounded-full bg-pink-500/80 inline-block" />
               <span className="w-3 h-3 rounded-full bg-rose-400/80 inline-block" />
-              <span className="ml-3 text-xs font-mono text-slate-600 dark:text-slate-400 flex items-center gap-1.5 font-semibold">
+              <span className="ml-3 text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center gap-1.5 font-semibold">
                 <Terminal className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" /> cosmoq-agent-orchestrator --live
               </span>
             </div>
@@ -245,27 +245,27 @@ export default function LandingPage({
           {/* Quick Animated Metric KPI Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-b border-slate-200/80 dark:border-slate-800">
             <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-rose-500/40 transition-all">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">Placement Rate</div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">Placement Rate</div>
               <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 font-display flex items-baseline gap-1">
                 94.8% <span className="text-xs text-emerald-600 font-normal">↑ 8.2%</span>
               </div>
             </div>
             <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-rose-500/40 transition-all">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">Highest Package</div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">Highest Package</div>
               <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 mt-1 font-display">
-                ₹48.5 <span className="text-xs font-normal text-slate-600 dark:text-slate-400">LPA</span>
+                ₹48.5 <span className="text-xs font-normal text-slate-600 dark:text-slate-300">LPA</span>
               </div>
             </div>
             <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-rose-500/40 transition-all">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">AI ATS Accuracy</div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">AI ATS Accuracy</div>
               <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 font-display">
                 99.2%
               </div>
             </div>
             <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-rose-500/40 transition-all">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">Active Hiring Drives</div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">Active Hiring Drives</div>
               <div className="text-2xl sm:text-3xl font-extrabold text-rose-700 dark:text-rose-400 mt-1 font-display">
-                28 <span className="text-xs font-normal text-slate-500 dark:text-slate-400">Live</span>
+                28 <span className="text-xs font-normal text-slate-500 dark:text-slate-300">Live</span>
               </div>
             </div>
           </div>
@@ -304,7 +304,7 @@ export default function LandingPage({
                 ATS Resume Matcher
                 <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
               </div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Scan & score against JDs</div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">Scan & score against JDs</div>
             </button>
             
             <button 
@@ -315,7 +315,7 @@ export default function LandingPage({
                 Active Hiring Drives
                 <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
               </div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Explore 28+ top drives</div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">Explore 28+ top drives</div>
             </button>
 
             <button 
@@ -326,7 +326,7 @@ export default function LandingPage({
                 Prep Lab & Mock AI
                 <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
               </div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">DSA & System Design tests</div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">DSA & System Design tests</div>
             </button>
 
             <button 
@@ -337,7 +337,7 @@ export default function LandingPage({
                 Placement Stats
                 <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
               </div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">View department analytics</div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">View department analytics</div>
             </button>
           </div>
 
@@ -347,7 +347,7 @@ export default function LandingPage({
       {/* SECTION 2: LIVE RECRUITER PARTNERS MARQUEE */}
       <section className="py-6 border-y border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 mb-4 text-center">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-bold">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-300 font-bold">
             TRUSTED BY RECRUITMENT TEAMS AT GLOBAL TECH LEADERS
           </span>
         </div>
@@ -397,7 +397,7 @@ export default function LandingPage({
 
                   <div className="space-y-2 pt-4 border-t border-slate-100 dark:border-slate-800/80 mb-6">
                     {feat.highlights.map((h, i) => (
-                      <div key={i} className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <div key={i} className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-300">
                         <CheckCircle2 className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                         <span>{h}</span>
                       </div>
@@ -447,7 +447,7 @@ export default function LandingPage({
                   <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5 font-display">
                     {ws.title}
                   </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                     {ws.desc}
                   </p>
                 </div>
@@ -482,7 +482,7 @@ export default function LandingPage({
                   <CheckCircle2 className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
                 </div>
                 <div className="text-slate-900 dark:text-white font-semibold mt-1">Resume Ingestion</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Auto-extract tech skills & GPA metrics</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-300 mt-1">Auto-extract tech skills & GPA metrics</div>
               </div>
               <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-rose-500/40 transition-colors shadow-xs">
                 <div className="text-rose-600 dark:text-rose-400 font-bold flex items-center justify-between">
@@ -490,7 +490,7 @@ export default function LandingPage({
                   <Activity className="w-3.5 h-3.5 text-pink-500 animate-pulse" />
                 </div>
                 <div className="text-slate-900 dark:text-white font-semibold mt-1">AI ATS Evaluator</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Match candidate vs Job Description</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-300 mt-1">Match candidate vs Job Description</div>
               </div>
               <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-rose-500/40 transition-colors shadow-xs">
                 <div className="text-rose-600 dark:text-rose-400 font-bold flex items-center justify-between">
@@ -498,7 +498,7 @@ export default function LandingPage({
                   <Bot className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
                 </div>
                 <div className="text-slate-900 dark:text-white font-semibold mt-1">Auto Schedule</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Dispatch interview links & notices</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-300 mt-1">Dispatch interview links & notices</div>
               </div>
             </div>
           </div>
@@ -510,7 +510,7 @@ export default function LandingPage({
                 <span className="text-[10px] font-mono font-bold uppercase text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
                   <Code2 className="w-3.5 h-3.5" /> AI INTERVIEW TRAINER
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                   Card {activePrepQuestionIndex + 1}/{flashcards.length || 4}
                 </span>
               </div>
@@ -538,7 +538,7 @@ export default function LandingPage({
                   setShowFlashcardAnswer?.(false);
                   playAudioFeedback?.('pop');
                 }}
-                className="w-full py-2 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white text-xs font-medium transition-all flex items-center justify-center gap-1 cursor-pointer"
+                className="w-full py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-medium transition-all flex items-center justify-center gap-1 cursor-pointer"
               >
                 <span>Next Practice Question</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -592,7 +592,7 @@ export default function LandingPage({
                           <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-400">
                             {notice.category}
                           </span>
-                          <span className="text-xs text-slate-500 dark:text-slate-400">
+                          <span className="text-xs text-slate-500 dark:text-slate-300">
                             {notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Just now'}
                           </span>
                         </div>
@@ -648,7 +648,7 @@ export default function LandingPage({
                       <div className={`w-3 h-3 rounded-full bg-white absolute top-0.5 transition-transform ${rule.active ? 'right-0.5' : 'left-0.5'}`} />
                     </div>
                   </div>
-                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1.5 leading-normal">{rule.desc}</p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1.5 leading-normal">{rule.desc}</p>
                 </div>
               ))}
             </div>
@@ -688,7 +688,7 @@ export default function LandingPage({
                     <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-xs">
                       {plc.package}
                     </span>
-                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+                    <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-300 uppercase">
                       DEPT: {plc.department}
                     </span>
                   </div>
