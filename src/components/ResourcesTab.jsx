@@ -39,7 +39,7 @@ export default function ResourcesTab({
               {filteredResources.length} Materials
             </span>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Download PPTs, company interview questions, and technical notes.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">Download PPTs, company interview questions, and technical notes.</p>
         </div>
         {canManageAll && (
           <button
@@ -61,7 +61,7 @@ export default function ResourcesTab({
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCategory === cat
                   ? 'bg-rose-600 text-white shadow-sm scale-105'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
               }`}
             >
               {cat}
@@ -95,7 +95,7 @@ export default function ResourcesTab({
         <div className="cosmo-glass-card p-12 rounded-3xl text-center space-y-3 shadow-sm border border-slate-200 dark:border-slate-800">
           <BookOpen className="w-10 h-10 text-slate-400 mx-auto" />
           <div className="text-base font-bold text-slate-900 dark:text-white">No study materials found</div>
-          <p className="text-xs text-slate-600 dark:text-slate-400">Try adjusting your search terms or upload new notes.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">Try adjusting your search terms or upload new notes.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -106,7 +106,7 @@ export default function ResourcesTab({
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400">
                     {res.category || 'Technical'}
                   </span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-300 font-mono flex items-center gap-1">
                     <FileCode className="w-3 h-3 text-slate-400" /> {res.month || '2026'}
                   </span>
                 </div>
@@ -119,7 +119,7 @@ export default function ResourcesTab({
                   onClick={() => playAudioFeedback('click')}
                   target="_blank"
                   rel="noreferrer"
-                  className="py-2.5 flex-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-600 text-slate-800 dark:text-slate-200 hover:text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-2 transform hover:scale-[1.02]"
+                  className="py-2.5 flex-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-600 text-slate-800 dark:text-slate-100 hover:text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-2 transform hover:scale-[1.02]"
                 >
                   <Download className="w-3.5 h-3.5" /> Download
                 </a>
