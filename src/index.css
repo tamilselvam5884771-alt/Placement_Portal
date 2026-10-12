@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *, [data-mode="dark"], [data-mode="dark"] *));
+
 @layer base {
   :root {
     /* Default Theme: Crimson Cyber */
@@ -61,12 +63,13 @@
 
   /* Dark Mode Palette */
   .dark, [data-mode="dark"] {
+    color-scheme: dark;
     --bg-app: #090D16;
     --bg-card: rgba(15, 23, 42, 0.75);
     --bg-card-hover: rgba(30, 41, 59, 0.85);
     --border-color: rgba(51, 65, 85, 0.7);
     --text-primary: #F8FAFC;
-    --text-secondary: #CBD5E1;
+    --text-secondary: #E2E8F0;
     --text-muted: #94A3B8;
     --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
   }
