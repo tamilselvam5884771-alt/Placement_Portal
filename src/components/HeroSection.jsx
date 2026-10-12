@@ -70,27 +70,27 @@ export default function HeroSection({
         {/* Quick Metrics KPI Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-b border-slate-200/80 dark:border-slate-800">
           <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">Placement Rate</div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">Placement Rate</div>
             <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 font-display flex items-baseline gap-1">
               94.8% <span className="text-xs text-rose-600 dark:text-rose-400 font-normal">↑ 8.2%</span>
             </div>
           </div>
           <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">Highest Package</div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">Highest Package</div>
             <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 mt-1 font-display">
               ₹48.5 <span className="text-xs font-normal text-slate-600 dark:text-slate-400">LPA</span>
             </div>
           </div>
           <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">AI ATS Accuracy</div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">AI ATS Accuracy</div>
             <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 font-display">
               99.2%
             </div>
           </div>
           <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">Active Hiring Drives</div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-300 font-bold">Active Hiring Drives</div>
             <div className="text-2xl sm:text-3xl font-extrabold text-rose-700 dark:text-rose-400 mt-1 font-display">
-              28 <span className="text-xs font-normal text-slate-500 dark:text-slate-400">Live</span>
+              28 <span className="text-xs font-normal text-slate-500 dark:text-slate-300">Live</span>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@ export default function HeroSection({
               ATS Resume Matcher
               <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
             </div>
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Scan & score against Job Descriptions</div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">Scan & score against Job Descriptions</div>
           </button>
           
           <button 
@@ -140,7 +140,7 @@ export default function HeroSection({
               Active Hiring Drives
               <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
             </div>
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Explore 28+ top recruiter drives</div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">Explore 28+ top recruiter drives</div>
           </button>
 
           <button 
@@ -151,7 +151,7 @@ export default function HeroSection({
               Prep Lab & Mock AI
               <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
             </div>
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">DSA, System Design & Aptitude practice</div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">DSA, System Design & Aptitude practice</div>
           </button>
 
           <button 
@@ -162,7 +162,7 @@ export default function HeroSection({
               Placement Stats
               <ChevronRight className="w-3.5 h-3.5 text-rose-500 group-hover:translate-x-0.5 transition-transform" />
             </div>
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">View real-time department analytics</div>
+            <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">View real-time department analytics</div>
           </button>
         </div>
 
