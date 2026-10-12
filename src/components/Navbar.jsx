@@ -41,7 +41,7 @@ export default function Navbar({
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" /> AGENTS ACTIVE
               </span>
             </div>
-            <span className="text-[10px] font-medium tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            <span className="text-[10px] font-medium tracking-wider text-slate-500 dark:text-slate-300 flex items-center gap-1.5">
               <span>Placement & Autonomous Hiring Engine</span>
             </span>
           </div>
@@ -68,7 +68,7 @@ export default function Navbar({
           >
             <Search className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 group-hover:scale-110 transition-transform" />
             <span>Search agent hub...</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-mono text-slate-600 dark:text-slate-400">
+            <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-mono text-slate-600 dark:text-slate-300">
               ⌘K
             </kbd>
           </button>
@@ -129,7 +129,7 @@ export default function Navbar({
               className="p-2.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors relative shadow-sm"
               title="Circulars & Notices"
             >
-              <Bell className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+              <Bell className="w-4 h-4 text-slate-600 dark:text-slate-300" />
               {notices.length > 0 && (
                 <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse" />
               )}
@@ -148,7 +148,7 @@ export default function Navbar({
                 </div>
                 <div className="mt-3 space-y-2.5 max-h-64 overflow-y-auto pr-1">
                   {notices.length === 0 ? (
-                    <div className="text-xs text-slate-500 dark:text-slate-400 py-4 text-center">No circulars posted yet</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-300 py-4 text-center">No circulars posted yet</div>
                   ) : (
                     notices.map(n => (
                       <div 
@@ -158,7 +158,7 @@ export default function Navbar({
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">{n.category}</span>
-                          <span className="text-[10px] text-slate-400 dark:text-slate-500">{n.created_at ? new Date(n.created_at).toLocaleDateString() : 'Just now'}</span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400">{n.created_at ? new Date(n.created_at).toLocaleDateString() : 'Just now'}</span>
                         </div>
                         <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate mt-1 group-hover:text-rose-600 dark:group-hover:text-rose-400">{n.title}</div>
                       </div>
