@@ -36,13 +36,13 @@ export default function ResumeMatcherTab({
           <Brain className="w-3.5 h-3.5" /> COSMOQ ATS RESUME INTELLIGENCE
         </div>
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white font-display">Evaluate Resume & Job Description Compatibility</h2>
-        <p className="text-xs text-slate-600 dark:text-slate-400">Instant AI keyword score, ATS gap analysis, and recruiter recommendation.</p>
+        <p className="text-xs text-slate-600 dark:text-slate-300">Instant AI keyword score, ATS gap analysis, and recruiter recommendation.</p>
       </div>
 
       <div className="cosmo-glass-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-2">Target Job Role</label>
+            <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-200 mb-2">Target Job Role</label>
             <select
               value={targetRole}
               onChange={(e) => setTargetRole(e.target.value)}
@@ -55,19 +55,19 @@ export default function ResumeMatcherTab({
             </select>
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-2">Candidate Department</label>
+            <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-200 mb-2">Candidate Department</label>
             <input
               type="text"
               disabled
               value={`Dept: ${currentDept}`}
-              className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-200 text-xs font-semibold cursor-not-allowed"
             />
           </div>
         </div>
 
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-            <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300">Paste Resume Text / Skill Summary</label>
+            <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-200">Paste Resume Text / Skill Summary</label>
             <div className="flex items-center gap-1.5 flex-wrap">
               {samples.map((s, idx) => (
                 <button
@@ -115,7 +115,7 @@ export default function ResumeMatcherTab({
           <div className="mt-6 p-6 rounded-2xl bg-white dark:bg-slate-900 border border-rose-500/30 space-y-4 animate-fade-in-scale shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400">Target Role: {aiMatchResult.targetRole}</span>
+                <span className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-300">Target Role: {aiMatchResult.targetRole}</span>
                 <h4 className="text-lg font-bold text-slate-900 dark:text-white">AI Assessment Results</h4>
               </div>
               <div className="text-right">
@@ -139,12 +139,12 @@ export default function ResumeMatcherTab({
               />
             </div>
 
-            <p className="text-xs text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-100 dark:border-slate-700/60 leading-relaxed">
+            <p className="text-xs text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-100 dark:border-slate-700/60 leading-relaxed">
               {aiMatchResult.recommendation}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 dark:text-emerald-300">
+              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 dark:text-emerald-200">
                 <div className="font-bold text-[10px] uppercase mb-1.5 flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Matching Tech Keywords
                 </div>
@@ -154,7 +154,7 @@ export default function ResumeMatcherTab({
                   ))}
                 </div>
               </div>
-              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300">
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200">
                 <div className="font-bold text-[10px] uppercase mb-1.5 flex items-center gap-1">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500" /> Recommended Gaps to Add
                 </div>
