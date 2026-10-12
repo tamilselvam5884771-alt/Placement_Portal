@@ -49,7 +49,7 @@ export default function NoticesTab({
               {filteredNotices.length} Items
             </span>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Official broadcast updates from Training & Placement Cell.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">Official broadcast updates from Training & Placement Cell.</p>
         </div>
         
         {canPostNotices && (
@@ -73,7 +73,7 @@ export default function NoticesTab({
               className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCat === cat
                   ? 'bg-rose-600 text-white shadow-sm scale-105'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
               }`}
             >
               {cat === 'Bookmarked' ? `Saved List (${bookmarkedNotices.length})` : cat}
@@ -108,7 +108,7 @@ export default function NoticesTab({
         <div className="cosmo-glass-card p-12 rounded-3xl text-center space-y-3 shadow-sm border border-slate-200 dark:border-slate-800">
           <AlertCircle className="w-10 h-10 text-slate-400 mx-auto" />
           <div className="text-base font-bold text-slate-900 dark:text-white">No matching circulars found</div>
-          <p className="text-xs text-slate-600 dark:text-slate-400">Try adjusting search filters or post new circulars.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">Try adjusting search filters or post new circulars.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -119,7 +119,7 @@ export default function NoticesTab({
                   <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getCategoryBadgeClass(notice.category)}`}>
                     {notice.category}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  <span className="text-xs text-slate-500 dark:text-slate-300 font-mono">
                     {notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Recent'}
                   </span>
                 </div>
@@ -138,7 +138,7 @@ export default function NoticesTab({
                     <FileText className="w-3.5 h-3.5" /> Attachment Link
                   </a>
                 ) : (
-                  <span className="text-slate-500 dark:text-slate-400 text-[11px] flex items-center gap-1">
+                  <span className="text-slate-500 dark:text-slate-300 text-[11px] flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-rose-500" /> COSMOQ Verified Circular
                   </span>
                 )}
