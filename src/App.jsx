@@ -696,7 +696,7 @@ export default function App() {
                 <span className="text-xs font-bold text-slate-900 dark:text-white font-mono uppercase">
                   {currentRole.toUpperCase()} MANAGEMENT DESK
                 </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:inline">
+                <span className="text-[11px] text-slate-500 dark:text-slate-300 hidden sm:inline">
                   • Create updates for students
                 </span>
               </div>
