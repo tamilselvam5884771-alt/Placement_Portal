@@ -22,7 +22,7 @@ export default function Footer({ showToast, playAudioFeedback }) {
             </div>
             <div>
               <span className="text-sm font-bold text-slate-900 dark:text-white font-display">COSMOQ AI Placement Portal</span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 block">Automated Recruitment & Campus Hiring Infrastructure</span>
+              <span className="text-xs text-slate-500 dark:text-slate-300 block">Automated Recruitment & Campus Hiring Infrastructure</span>
             </div>
           </div>
 
@@ -49,12 +49,12 @@ export default function Footer({ showToast, playAudioFeedback }) {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400 font-mono">
+        <div className="pt-6 border-t border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-300 font-mono">
           <div>© 2026 COSMOQ Placement Engine. All rights reserved.</div>
           <div className="flex items-center gap-4">
-            <span className="hover:text-rose-500 cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-rose-500 cursor-pointer">Terms of Service</span>
-            <span className="hover:text-rose-500 cursor-pointer">System Status: Operational 🟢</span>
+            <span className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer">Terms of Service</span>
+            <span className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer">System Status: Operational 🟢</span>
           </div>
         </div>
       </div>
